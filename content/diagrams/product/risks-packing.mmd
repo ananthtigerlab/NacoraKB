@@ -1,0 +1,13 @@
+flowchart LR
+    A[Policy Wizard] --> B[Packing Tab]
+    C[Choices Module]
+    D[Admin]
+    D -- Manages --> C
+    C -- Provides Options --> B
+    B -- Configures Packing Types --> E[Rating Configuration]
+    E --> F[Base Rater]
+    F -- Requires Rates --> B
+    B -- Drives Options --> G[Shipment Form]
+    B -- Used in --> H[Business Rules]
+    F -- Missing Rates --> I[Referral]
+    H -- Can Trigger --> I

@@ -1,0 +1,19 @@
+flowchart LR
+    BP["Business Partner"]
+
+    BP -- is a --> Person["Person"]
+    BP -- is a --> Group["Group"]
+    BP -- is a --> Company["Company"]
+
+    Person -- has role --> Producer["Producer"]
+    Person -- has role --> Underwriter["Underwriter"]
+    Person -- has role --> Participant["Participant"]
+    Person -- has role --> Administrator["Administrator"]
+    Person -- has role --> Policyholder["Policyholder"]
+
+    Company -- has role --> BrokerCo["Broker Company"]
+    Company -- has role --> Policyholder
+    Company -- has role --> Insurer["Insurance Company"]
+
+    Group -- has role --> SalesUnit["Sales Unit"]
+    Group -- has role --> AdminGroup["Admin Group"]

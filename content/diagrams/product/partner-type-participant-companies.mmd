@@ -1,0 +1,8 @@
+flowchart LR
+    BrokerCo["Broker Company or Policyholder"] --> PartCo["Participant Company"]
+    PartCo -- has --> CostCode["Cost Centre Code"]
+    PartCo -- listed on --> Policy["Policy"]
+    PartCo -- contains --> Participant["Person Participant"]
+    SSO["SSO Sign-in"] -- maps to --> PartCo
+    PartCo -- defines --> DataScope["Data Scope"]
+    Participant -- inherits --> DataScope

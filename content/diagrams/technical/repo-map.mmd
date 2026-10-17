@@ -1,0 +1,13 @@
+flowchart LR
+    Repo["InSurance Monorepo"]
+
+    Repo --> Django["Django Backend"]
+    Repo --> Frontend["Frontend Workspace"]
+    Repo --> Deploy["Deployment Config"]
+    Repo --> Docker["Docker Build"]
+
+    Django --> Shared["Shared Platform Modules"]
+    Django --> Nacora["Nacora Client Overrides"]
+    Django --> Submodules["Internal Libraries"]
+
+    Nacora -- Overrides --> Shared

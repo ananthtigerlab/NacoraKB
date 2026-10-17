@@ -1,0 +1,24 @@
+flowchart LR
+    Nacora["Nacora Platform"]
+    Events["Lifecycle Events"]
+    Models["Financial Models"]
+    BordereauGen["Bordereau Generation"]
+    Analytics["Analytics Stream"]
+    Audit["Audit Trail"]
+    BMSWebhook["BMS Webhook"]
+    BMS["BMS System"]
+    Finance["Finance Team"]
+
+    Nacora --> Events
+    Events --> Models
+    Models --> Analytics
+    Models --> Audit
+
+    Events -- "Policy Events" --> BMSWebhook
+    Nacora -- "Monthly Cron" --> BordereauGen
+    BordereauGen --> Analytics
+    BordereauGen --> BMSWebhook
+
+    BMSWebhook --> BMS
+    BordereauGen -- "S3 Bordereau File" --> Finance
+    BMS -- "Reconciles Invoices" --> Finance

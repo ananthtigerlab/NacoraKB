@@ -1,0 +1,16 @@
+flowchart LR
+    A[Browser Request] --> B{Is Token Auth or Server-to-Server?}
+    B -- Yes --> K[Bypass CORS and CSRF]
+    B -- No --> C{Is Cross-Origin?}
+
+    C -- Yes --> D[CORS Middleware Check]
+    D --> E{Origin Allowed?}
+    E -- No --> F[Browser Blocks Request]
+    E -- Yes --> G{Is Session Auth Write?}
+    C -- No --> G
+
+    G -- Yes --> H[CSRF Middleware Check]
+    H --> I{Token Valid?}
+    I -- No --> J[403 CSRF Error]
+    I -- Yes --> L[Request Proceeds to View]
+    G -- No --> L

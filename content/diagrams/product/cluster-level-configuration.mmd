@@ -1,0 +1,19 @@
+flowchart LR
+    Global["Global Configuration"]
+    Cluster["Cluster Configuration"]
+    Policy["Policy Configuration"]
+    Admin["Administrator"]
+    BrokerCo["Broker Company"]
+    ClusterClauses["Cluster Clauses Library"]
+    ReferralRouting["Referral Routing"]
+
+    Global -- "Inherited by" --> Cluster
+    Cluster -- "Inherited by" --> Policy
+
+    Admin -- "Manages" --> Cluster
+    BrokerCo -- "Assigned to" --> Cluster
+
+    Cluster -- "Includes" --> ClusterClauses
+    Cluster -- "Influences" --> ReferralRouting
+    ClusterClauses -- "Available to" --> Policy
+    ReferralRouting -- "Used by" --> Policy

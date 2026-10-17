@@ -1,0 +1,18 @@
+flowchart LR
+    Admin["Administrators"]
+    Broker["Brokers"]
+    GlobalLib["Global Clauses Library"]
+    ClusterConfig["Cluster Configuration"]
+    Policy["Policy"]
+    BusinessRules["Business Rules"]
+    Shipment["Shipment"]
+    OutputDocs["Quote and Certificate Documents"]
+
+    Admin --> GlobalLib
+    Admin --> ClusterConfig
+    GlobalLib -- Import to --> Policy
+    ClusterConfig -- Auto Assign to --> Policy
+    Broker --> Policy
+    Policy -- Makes clauses available --> BusinessRules
+    BusinessRules -- Attach clauses to --> Shipment
+    Shipment -- Clauses rendered on --> OutputDocs

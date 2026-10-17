@@ -1,0 +1,13 @@
+flowchart LR
+    SourceCode[Source Code]
+    Dependencies[Dependencies]
+    BuildArgs{Build Args}
+
+    SourceCode --> Dockerfile[Dockerfile]
+    Dependencies --> Dockerfile
+    BuildArgs --> Dockerfile
+
+    Dockerfile --> NodeStage[Node Stage]
+    NodeStage -- Frontend Dist --> PythonStage[Python Stage]
+    PythonStage -- Final Image --> TagPush[Tag and Push]
+    TagPush --> GHCR[GHCR Registry]

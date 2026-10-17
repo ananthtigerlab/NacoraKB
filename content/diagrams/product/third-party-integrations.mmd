@@ -1,0 +1,17 @@
+flowchart LR
+    A["Nacora Platform"]
+    B["Currency Conversion Service"]
+    C["Sanctions Screening Service"]
+    D["Employee Identity Provider"]
+    E["Address Autocomplete Service"]
+    F["Vessel Data Provider"]
+    G["Geographic Risk Service"]
+    H["LLM Commodity Classifier"]
+
+    A -- Uses for Rating --> B
+    A -- Sends Cargo for Screening --> C
+    A -- Queries for Login --> D
+    A -- Uses for Shipment Form --> E
+    A -- Queries for Sea Freight Rules --> F
+    A -- Sends Shipments for Risk Scoring --> G
+    A -- Sends Text for Classification --> H

@@ -1,0 +1,10 @@
+flowchart LR
+    Broker["Broker"] --> OpenClaim["Open Claim"]
+    OpenClaim --> CaptureIncident["Capture Incident Details"]
+    CaptureIncident --> UploadEvidence["Upload Evidence"]
+    UploadEvidence --> SubmitToSurveyor["Submit to Surveyor"]
+    SubmitToSurveyor -- Notifies --> SurveyorGroup["Surveyor Group"]
+    SubmitToSurveyor -- Sets Status --> Reported["Status: Reported"]
+    SurveyorGroup -- Investigates --> OffPlatform["Investigate Off-Platform"]
+    OffPlatform -- Outcome --> UpdateStatus["Update Claim Status"]
+    UpdateStatus --> FinalStatus["Status: Settled or Closed"]

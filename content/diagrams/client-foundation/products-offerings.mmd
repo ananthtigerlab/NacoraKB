@@ -1,0 +1,16 @@
+flowchart LR
+    Product[Open Marine Cargo Product] --> Attributes{Product Attributes}
+    Attributes --> Conveyance[Conveyance Modes]
+    Attributes --> Coverage[Coverage Levels]
+    Attributes --> Rating[Rating Dimensions]
+
+    Conveyance --> Modes[Road, Sea, Air, Rail]
+    Coverage --> ICC[ICC A, ICC B, ICC C]
+    Rating --> Dims[Commodity, Packing, Value]
+
+    Product --> Policyholder[Policyholder]
+    Policyholder --> Participant[Participant Companies]
+
+    Product --> Documents[Customer Documents]
+    Documents --> Quote[Quote PDF]
+    Documents --> Cert[Certificate PDF]

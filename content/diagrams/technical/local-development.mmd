@@ -1,0 +1,14 @@
+flowchart LR
+    Prereqs[Prerequisites] --> SetupCode[Clone and Env Setup]
+    SetupCode --> StartServices[Start Docker Services]
+    StartServices --> InitialSetup[Run Migrations and Seed]
+    InitialSetup --> DevLoop{Development Loop}
+
+    DevLoop -- Frontend Work --> Frontend[Nx Dev Server]
+    DevLoop -- Backend Work --> Backend[Docker App Service]
+    DevLoop -- Testing --> Tests[Run Tests]
+
+    Frontend --> Common[Common Commands]
+    Backend --> Common
+    Tests --> Common
+    Common --> DevLoop

@@ -1,0 +1,15 @@
+flowchart LR
+    User[User Request] --> Auth{Authenticate User};
+
+    Auth -- K+N Internal Staff --> SSO[SSO Okta];
+    Auth -- External Underwriter --> UP[Username Password];
+    Auth -- External Participant --> OTP[OTP Email];
+
+    SSO --> Authorize[Authorisation Layer];
+    UP --> Authorize;
+    OTP --> Authorize;
+
+    Authorize[Authorisation Layer] --> Scope[Data Scoping Layer];
+    Scope --> Domain[Domain Isolation];
+    Domain --> Sanctions[Sanctions Check];
+    Sanctions --> Access[Access Granted];

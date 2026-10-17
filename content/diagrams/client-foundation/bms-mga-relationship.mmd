@@ -1,0 +1,9 @@
+flowchart LR
+    BMS_Users["BMS Users, Broker Staff"]
+    BMS_System["BMS, Client Billing, Commissions"]
+    MGA_Users["MGA Users, Staff, Insurers"]
+    MGA_System["MGA, Policy, Rating, Claims"]
+
+    BMS_Users --> BMS_System
+    MGA_Users --> MGA_System
+    MGA_System -- Emits Monthly Bordereau --> BMS_System

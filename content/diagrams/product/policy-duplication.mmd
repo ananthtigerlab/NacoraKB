@@ -1,0 +1,16 @@
+flowchart LR
+    A["Broker Duplicates Policy"]
+    B["System Creates Draft"]
+    C["Copies Core Data"]
+    D{"Change Insurer or Policyholder?"}
+    E["Broker Reviews Wizard"]
+    F["Activates Policy"]
+    G["New Independent Policy"]
+
+    A --> B
+    B --> C
+    C --> D
+    D -- Yes --> E
+    D -- No --> E
+    E --> F
+    F --> G

@@ -1,0 +1,20 @@
+flowchart LR
+    BrokerCompany["Broker Company"]
+    Policyholder["Policyholder"]
+    ParticipantCompany["Participant Company"]
+    SalesUnit["Sales Unit"]
+    Producer["Producer"]
+    PolicyWizard["Policy Wizard"]
+    Policy["Policy"]
+    Shipments["Shipments"]
+    Referrals["Referrals"]
+
+    Policyholder -- "Belongs To" --> BrokerCompany
+    ParticipantCompany -- "Belongs To" --> BrokerCompany
+    SalesUnit -- "Belongs To" --> BrokerCompany
+    Producer -- "Belongs To" --> SalesUnit
+
+    PolicyWizard -- "Selects First" --> BrokerCompany
+    BrokerCompany -- "Anchors" --> Policy
+    Policy -- "Drives" --> Shipments
+    Policy -- "Drives" --> Referrals

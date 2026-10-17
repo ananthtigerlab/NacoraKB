@@ -1,0 +1,17 @@
+flowchart LR
+    A[Push or PR] --> B[Lint and Format]
+    B --> C[Type Check]
+    C --> D[Run Tests]
+    D --> E{On Main Branch?}
+
+    E -- Yes --> F[Build Image]
+    F --> G{Is Tagged Release?}
+
+    G -- Yes --> H{Manual Approval?}
+    H -- Yes --> I[Deploy Production]
+    I --> K[End]
+
+    G -- No --> J[Deploy Staging]
+    J --> K[End]
+
+    E -- No --> K[End]

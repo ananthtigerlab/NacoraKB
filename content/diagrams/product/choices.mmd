@@ -1,0 +1,17 @@
+flowchart LR
+    Catalogue["Tenant Choices Catalogue"]
+    Types["Grouped by Type"]
+    PolicyConfig["Policy Configuration"]
+    RisksTabs["Risks Tabs Selection"]
+    ShipmentForm["Shipment Quote Form"]
+    Identifiers["Choice Identifiers"]
+    RatingEngine["Rating Engine Lookup"]
+    Integrations["Inbound Integrations"]
+
+    Catalogue --> Types
+    Types -- "Subset selected by" --> PolicyConfig
+    PolicyConfig -- "Via" --> RisksTabs
+    RisksTabs -- "Available in" --> ShipmentForm
+    ShipmentForm -- "Submits" --> Identifiers
+    Integrations -- "Maps external codes to" --> Identifiers
+    Identifiers -- "Used by" --> RatingEngine

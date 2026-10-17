@@ -1,0 +1,28 @@
+flowchart LR
+    Client["Client System"]
+    Endpoint["NacoraHub SOAP Endpoint"]
+    Auth{"Authenticate Request"}
+    Idempotency{"Check Message ID"}
+    Parse["Parse and Translate Request"]
+    Policy["Lookup Policy"]
+    Build["Build Internal Shipment"]
+    Rate["Run Rating Pipeline"]
+    Validate{"Validate Premium"}
+    Execute["Execute Operation"]
+    Cache["Cache Response"]
+    Return["Return SOAP Response"]
+
+    Client --> Endpoint
+    Endpoint --> Auth
+    Auth -- Fail --> Return
+    Auth -- Success --> Idency
+    Idency -- Cached --> Cache
+    Idency -- New Request --> Parse
+    Parse --> Policy
+    Policy --> Build
+    Build --> Rate
+    Rate --> Validate
+    Validate -- Zero Premium --> Return
+    Validate -- Valid --> Execute
+    Execute --> Cache
+    Cache --> Return

@@ -1,0 +1,15 @@
+flowchart LR
+    User[User]
+    App[Django App]
+    PrivateStorage[Private Storage Backend]
+    S3Bucket[S3 Bucket]
+    AttachmentModel[Attachment Model]
+    PresignedURL[Presigned URL]
+    StaticAssets[Static Assets]
+    StaticStorage[Static Files Storage]
+    CDN[Nginx or CDN]
+    S3Security[S3 Security]
+
+    User -- Uploads/Requests --> App
+    App -- Uses --> PrivateStorage
+    PrivateStorage -- Stores Files --> S

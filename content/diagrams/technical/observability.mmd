@@ -1,0 +1,14 @@
+flowchart LR
+    A[Application System] --> B[Sentry: Errors, Performance]
+    A --> C[Silk: Request Profiling]
+    A --> D[RabbitMQ UI: Queue Metrics]
+    A --> E[Celery Flower: Task State]
+    A --> F[Health Check: Liveness]
+    A --> G[Docker Logs: Structured Logs]
+
+    B --> H(Engineers)
+    C --> H
+    D --> H
+    E --> H
+    F --> H
+    G --> H

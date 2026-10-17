@@ -1,0 +1,15 @@
+flowchart LR
+    A["User System Action"]
+    B["Audit Library Capture"]
+    C["Async Dispatch Queue"]
+    D["Deduplicate Events"]
+    E["DynamoDB Immutable Store"]
+    F["Audit UI Query Filter"]
+    G["Compliance Operations Security"]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G

@@ -1,0 +1,21 @@
+flowchart LR
+    A[Work Items]
+    B[Jira Filter 12060]
+    C[Backlog]
+    D[In Progress]
+    E[Internal Testing]
+    F[Confirming]
+    G[Verified Done]
+    H[On Hold]
+    I[Obsolete]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+
+    D --> H
+    C --> I
+    E --> I

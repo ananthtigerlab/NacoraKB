@@ -1,0 +1,20 @@
+flowchart LR
+    Hub["NacoraHub Dashboards"] --> Portal["Shipment Portal"]
+    Hub --> BackOffice["Back Office"]
+
+    Portal -- "for" --> Participants["Participants"]
+    BackOffice -- "for" --> BackOfficeUsers["Brokers, Underwriters, Admins"]
+
+    Participants -- "uses" --> ShipmentDash["Shipment Dashboard"]
+    Participants -- "uses" --> ReferralsDash["Referrals Dashboard"]
+    Participants -- "uses" --> SpecialRatesDash["Special Rates Dashboard"]
+
+    BackOfficeUsers -- "uses" --> ShipmentDash
+    BackOfficeUsers -- "uses" --> ReferralsDash
+    BackOfficeUsers -- "uses" --> SpecialRatesDash
+    BackOfficeUsers -- "uses" --> OtherBackOfficeDash["Other Back Office Dashboards"]
+
+    ShipmentDash -- "shares" --> CommonLayout["Common Dashboard Layout"]
+    ReferralsDash -- "shares" --> CommonLayout
+    SpecialRatesDash -- "shares" --> CommonLayout
+    OtherBackOfficeDash -- "shares" --> CommonLayout

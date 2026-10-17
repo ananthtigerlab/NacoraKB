@@ -1,0 +1,15 @@
+flowchart LR
+    User[User] --> ListingPage[Listing Page]
+
+    ListingPage --> KeywordSearch[Keyword Search Bar]
+    ListingPage --> StructuredFilters[Structured Filters]
+
+    KeywordSearch --> Server[Server Processing]
+    StructuredFilters --> Server
+
+    Server --> FilteredResults[Filtered Results]
+    FilteredResults --> DisplayResults[Display Results]
+
+    DisplayResults --> FacetedCounts[Update Faceted Counts]
+    DisplayResults --> PersistPreferences[Persist Preferences]
+    DisplayResults --> ExportData[Export Data]

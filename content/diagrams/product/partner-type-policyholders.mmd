@@ -1,0 +1,11 @@
+flowchart LR
+    Users[Users] --> Platform[Platform]
+    Platform -- manages and selects --> Policyholder["Policyholder"]
+
+    Policyholder -- belongs to --> BrokerCompany["Broker Company"]
+    Policyholder -- owns --> Policy["Policy"]
+    Policyholder -- parent of --> ParticipantCompany["Participant Company"]
+
+    Policy -- generates --> Certificates["Certificates"]
+    Policyholder -- drives --> CommodityGroups["Commodity Groups"]
+    Policyholder -- groups --> BordereauReports["Bordereau Reports"]

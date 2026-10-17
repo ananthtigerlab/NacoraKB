@@ -1,0 +1,13 @@
+flowchart LR
+    BP["Business Partner"] --> NA["Named Assured"]
+
+    Participant["Participant"] -- "selects or creates" --> NA
+    Broker["Broker"] -- "selects or creates" --> NA
+    Admin["Administrator"] -- "maintains" --> NA
+    BulkUpload["Bulk Upload"] -- "auto-creates" --> NA
+
+    NA -- "attached to" --> Shipment["Shipment"]
+
+    Shipment -- "generates" --> Certificate["Certificate"]
+    Shipment -- "triggers" --> Referral["Referral Activity Page"]
+    Shipment -- "triggers" --> ClaimNotification["Claim Notification"]

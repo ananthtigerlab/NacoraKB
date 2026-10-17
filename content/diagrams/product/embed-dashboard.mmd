@@ -1,0 +1,11 @@
+flowchart LR
+    Users[Internal Users] --> Dashboard(Embed Dashboard)
+
+    Dashboard --> Operational[Operational Overview]
+    Dashboard --> Financial[Financial Overview]
+    Dashboard --> Policy[Policy Overview]
+    Dashboard --> Rules[Business Rules Monitor]
+    Dashboard --> Rates[Special Rates Usage]
+
+    PlatformData[Platform Data] -- Phase 1 --> Dashboard
+    ExternalData[External Data] -- Phase 2 --> Dashboard

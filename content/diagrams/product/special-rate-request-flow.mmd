@@ -1,0 +1,22 @@
+flowchart LR
+    A[Create Request Form]
+    B{Submit Action}
+    C[Pending Approval Queue]
+    D{Underwriter Decision}
+    E[Approved Rate]
+    F[Declined Rate]
+    G[Rating Engine Applies]
+    H[Draft State]
+    I[Edit Request]
+
+    A --> B
+    B -- Submit for Approval --> C
+    B -- Confirm Rates --> E
+    B -- Save Draft --> H
+    H --> I
+    I --> A
+    C --> D
+    D -- Confirm Rates --> E
+    D -- Decline Request --> F
+    D -- Send Back for Revision --> I
+    E --> G

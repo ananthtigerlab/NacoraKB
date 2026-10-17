@@ -1,0 +1,22 @@
+flowchart LR
+    A[User Access] --> B(Referral Activity Page)
+
+    B --> C[Review Referral Details]
+    C --> D{Underwriter Action?}
+
+    D -- Approve --> E[Referral Approved]
+    D -- Decline --> F[Referral Declined]
+    D -- Request More Info --> G[Awaiting Participant Reply]
+    D -- Reassign --> H[Referral Reassigned]
+
+    D -- Adjust Clauses/Premium --> C
+    D -- Add Internal Notes --> C
+
+    E --> I[Notify Participant]
+    F --> I
+    G --> I
+    H --> I
+
+    B -- Participant Access --> J[Simplified View]
+    J --> C
+    J --> G

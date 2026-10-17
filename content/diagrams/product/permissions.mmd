@@ -1,0 +1,15 @@
+flowchart LR
+    User[User] --> HasRoles(Has Roles)
+    HasRoles --> Roles[Roles]
+
+    User --> BelongsTo(Belongs to Company)
+    BelongsTo --> Company[Company]
+
+    Portal[Portal] --> Decide{Decide Permissions}
+    Roles --> Decide
+    Company --> Decide
+
+    Decide --> Permissions[Permissions]
+    Permissions --> Navigation[Navigation]
+    Permissions --> DataScope[Data Scope]
+    Permissions --> Actions[Actions]

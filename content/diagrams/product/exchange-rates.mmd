@@ -1,0 +1,8 @@
+flowchart LR
+    FX_Provider["FX Provider"] --> Daily_Sync["Daily Sync Job"]
+    Daily_Sync --> Rate_Table["Exchange Rates Table"]
+    Admin["Administrators"] --> Rate_Table
+    Rate_Table -- provides rates for --> Platform_Modules["Platform Modules"]
+    Platform_Modules -- generates data for --> Finance["Finance"]
+    Rate_Table -- missing rate --> Referral["Referral Process"]
+    Rate_Table -- all cross rates via --> USD_Pivot["USD Pivot"]

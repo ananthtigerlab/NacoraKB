@@ -1,0 +1,18 @@
+flowchart LR
+    A[Conveyance Tab] --> B[Define Transport Modes]
+    B --> C[Set Backdating Tolerance]
+    D[Choices Module] --> B
+
+    B -- Available on --> E[Shipment Form]
+    B -- Rating Dimension --> F[Rating Configuration]
+    F --> G[Base Rater]
+
+    C -- Enforced by --> H[Backdating Check Rule]
+
+    I[Shipment Submission] --> H
+    I --> G
+
+    H -- Exceeds Tolerance --> J[Referral for Review]
+    G -- No Rate --> J
+
+    B -- If Sea Mode --> K[Vessel Rules]

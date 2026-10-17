@@ -1,0 +1,12 @@
+flowchart LR
+    UserUpload["User Uploads Excel"] --> UploadHandler["Upload Handler"]
+    UploadHandler --> RowProcessor["Row Processor"]
+    RowProcessor --> Shipments["Shipments"]
+    Shipments --> ReportLog["Log Report and Activity"]
+
+    ExportRequest["User Requests Export"] --> ExporterFramework["Formatter and Exporter"]
+    ExporterFramework --> ExportFile["Generate Report File"]
+
+    SharedMapper["XLS Mapper"]
+    RowProcessor -- "Uses" --> SharedMapper
+    ExporterFramework -- "Uses" --> Shared

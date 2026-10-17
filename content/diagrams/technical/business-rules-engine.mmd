@@ -1,0 +1,14 @@
+flowchart LR
+    Target["Target Object"]
+    Engine["Rules Engine"]
+    Evaluate["Evaluate Rules"]
+    Conditions{"Conditions Match?"}
+    Actions["Actions Taken"]
+    Audit["Audit Matched Rules"]
+
+    Target --> Engine
+    Engine --> Evaluate
+    Evaluate --> Conditions
+    Conditions -- Yes --> Actions
+    Actions --> Audit
+    Conditions -- No --> Evaluate

@@ -1,0 +1,7 @@
+flowchart LR
+    A[Initiate Policy Change] --> B{Cancellation or Endorsement?}
+    B -- Cancellation --> C[Process Cancellation]
+    B -- Endorsement --> D[Process Endorsement]
+    C --> E[Persist Updates]
+    D --> E
+    E --> F[Trigger Side Effects]

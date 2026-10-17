@@ -1,0 +1,17 @@
+flowchart LR
+    A[Shipment Submission]
+    B[Rating Pipeline]
+    C[Sanctions Screening]
+    D{Any Sanction Match?}
+    E[Create Referral]
+    F[Underwriter Review]
+    G[Commercial Rating]
+    H[Quote Issued]
+
+    A --> B
+    B --> C
+    C --> D
+    D -- Yes --> E
+    E --> F
+    D -- No --> G
+    G --> H

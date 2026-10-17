@@ -1,0 +1,12 @@
+flowchart LR
+    A["Shipment Booked or Endorsed"] --> B["Amend Shipment"]
+    B --> C["Make Changes"]
+    C --> D["Submit Endorsement"]
+    D --> E{"Triggers Referral?"}
+    E -- Yes --> F["Endorsement Held"]
+    F --> G{"Referral Approved?"}
+    G -- Yes --> H["Create Record, Re-issue Certificate"]
+    G -- No --> I["Endorsement Declined"]
+    E -- No --> H
+    H --> J["Shipment Booked Endorsed"]
+    I --> A

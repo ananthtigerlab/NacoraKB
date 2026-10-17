@@ -1,0 +1,16 @@
+flowchart LR
+    A["Workflow Event"]
+    B["Build Notification"]
+    C["Enqueue Message"]
+    D["Dispatch Mail Service"]
+    E["Recipient Inbox"]
+    F["Admin Monitor Queue"]
+    G["Template Library"]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    F -- "Review Failures" --> C
+    G -- "Provides Templates" --> B
+    F -- "Manages" --> G

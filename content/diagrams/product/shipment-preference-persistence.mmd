@@ -1,0 +1,16 @@
+flowchart LR
+    User[User]
+    UserAccount[User Account]
+    ListingPage[Listing Page]
+    ListingConfig[Listing Configuration]
+    LocaleSettings[Locale Settings]
+    PersistedStorage[Persisted Storage]
+    RenderedView[Rendered View]
+
+    User -- Interacts with --> ListingPage
+    ListingPage -- Captures --> ListingConfig
+    ListingConfig -- Saves to --> PersistedStorage
+    LocaleSettings -- Saved to --> PersistedStorage
+    PersistedStorage -- Linked to --> UserAccount
+    UserAccount -- Provides settings for --> ListingPage
+    ListingPage -- Displays as --> RenderedView

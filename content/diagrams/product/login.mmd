@@ -1,0 +1,19 @@
+flowchart LR
+    A[User Login] --> B{Select Portal}
+
+    B --> C[Backoffice Portal]
+    B --> D[Shipment Portal]
+
+    C --> E[Microsoft SSO]
+    C --> F[Email Password]
+
+    D --> E
+    D --> G[Email OTP]
+
+    E --> H[Successful Login]
+    E --> I[Pending Approval]
+
+    F --> H
+    F --> J[Account Locked]
+
+    G --> H

@@ -1,0 +1,18 @@
+flowchart LR
+    A["State Transition"] --> B["Build Payload and Log"]
+    B --> C{"Mechanism Type?"}
+
+    C -- Webhook --> D["Sign and Post HTTPS"]
+    D --> E["Retry and Dead Letter"]
+    E --> F["GeoRisk Provider"]
+    E --> G["K+N BMS"]
+
+    C -- Event Stream --> H["Enrich Event"]
+    H --> I["Publish to Firehose"]
+    I --> J["S3 Data Lake"]
+    J --> K["Analytics Warehouse"]
+    K --> L["Finance Pipeline"]
+    K --> M["Downstream Analytics"]
+
+    E -.-> N["Nacora Operations"]
+    I -.-> N

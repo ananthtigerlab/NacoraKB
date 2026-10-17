@@ -1,0 +1,26 @@
+flowchart LR
+    NacoraHub["NacoraHub Platform"]
+
+    ShipmentPortal["Shipment Portal"]
+    BackOffice["Back-Office"]
+
+    Participant["Participant"]
+    InternalUsers["Broker, Underwriter, Admin"]
+
+    Shipment["Shipment"]
+    Policy["Policy"]
+
+    BMS["BMS System"]
+
+    NacoraHub --> ShipmentPortal
+    NacoraHub --> BackOffice
+
+    Participant --> ShipmentPortal -- "manages" --> Shipment
+    InternalUsers --> BackOffice
+
+    BackOffice -- "configures" --> Policy
+    BackOffice -- "manages" --> Shipment
+
+    Shipment -- "based on" --> Policy
+
+    NacoraHub -- "integrates with" --> BMS

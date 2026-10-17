@@ -1,0 +1,15 @@
+flowchart LR
+    Setup["Setup Commands"]
+    InternalData["Internal Choices and Lookups"]
+    ConfigAttrs["Choices Config Attributes"]
+    LegacyMap["SOAP SALOG CODE MAP"]
+    LookupService["BiDirectionalLookupService"]
+    ExternalSys["External Systems"]
+
+    Setup --> InternalData
+    InternalData -- Stores Codes --> ConfigAttrs
+
+    ExternalSys -- Inbound Request --> LookupService
+    LookupService -- Primary Source --> ConfigAttrs
+    LookupService -- Fallback Source --> LegacyMap
+    LookupService -- Outbound Response --> ExternalSys

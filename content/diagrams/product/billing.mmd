@@ -1,0 +1,7 @@
+flowchart LR
+    A[Shipment Booked] --> B[Calculate Commission]
+    B --> C[Create Transaction Record]
+    C --> D[Monthly Aggregation]
+    D --> E[Generate Bordereau]
+    E --> F[Export Bordereau]
+    E --> G[Emit Analytics Event]

@@ -1,0 +1,15 @@
+flowchart LR
+    A[Trigger Event]
+    B[Nacora Mail Service]
+    C[Post Office Queue]
+    D[Celery Queue Drain]
+    E[Anymail Backend]
+    F[Amazon SES]
+    G[Bounce Complaint]
+
+    A -- Calls Send Notification --> B
+    B -- Inserts Email to Queue --> C
+    C -- Drained by --> D
+    D -- Hands to Anymail --> E
+    E -- Sends Email --> F
+    F -- SNS Webhooks --> G

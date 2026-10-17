@@ -1,0 +1,11 @@
+flowchart LR
+    A["User Sign In"] --> B["Platform Checks PDM"]
+    B --> C{"Cost Center Found?"}
+    C -- Yes --> D["User Accesses Platform"]
+    C -- No --> E["User in Holding Company"]
+    E --> F["Record in Admin Queue"]
+    F --> G["Administrator Reviews"]
+    G --> H{"Action?"}
+    H -- Approve --> I["User Placed in Company"]
+    H -- Reject --> J["User Deactivated"]
+    I --> D

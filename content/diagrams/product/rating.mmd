@@ -1,0 +1,19 @@
+flowchart LR
+    Risks["Risks Step Finalized"]
+    Lookup["Build Lookup Tables"]
+    Factors["Define Rating Factors"]
+    Permutations["Generate Permutations"]
+    BaseRate["Assign Base Rates"]
+    SpecialRate["Apply Special Rates"]
+    BusinessRules["Apply Business Rules"]
+    FX["Apply FX Conversion"]
+    Premium["Calculate Final Premium"]
+
+    Risks --> Factors
+    Lookup --> Factors
+    Factors --> Permutations
+    Permutations --> BaseRate
+    BaseRate --> SpecialRate
+    SpecialRate --> BusinessRules
+    BusinessRules --> FX
+    FX --> Premium

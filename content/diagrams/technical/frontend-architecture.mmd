@@ -1,0 +1,21 @@
+flowchart LR
+    Nx[Nx Workspace] --> Monorepo(Frontend Monorepo)
+    Monorepo --> WizardApp[Nacora Wizard App]
+    Monorepo --> PortalApp[Nacora Portal App]
+    Monorepo --> SharedLibs(Shared Libraries)
+
+    WizardApp --> Redux[Redux Toolkit State]
+    PortalApp --> Redux
+    SharedLibs --> Redux
+
+    WizardApp --> API[Endpoint Wrapper API]
+    PortalApp --> API
+    SharedLibs --> API
+
+    API --> Django[Django Backend]
+    Django --> Webpack[Webpack Loader]
+    Webpack --> WizardApp
+    Webpack --> PortalApp
+
+    PortalApp -- Dual Mode --> CSP(CSP Mode)
+    PortalApp -- Dual Mode --> BO(BO Mode)

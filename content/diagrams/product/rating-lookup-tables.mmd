@@ -1,0 +1,15 @@
+flowchart LR
+    RawCountries[Raw Countries] --> RoutesTable(Routes Lookup Table)
+    RawCommodities[Raw Commodities] --> CommodityTable(Commodity Groups Lookup Table)
+
+    RoutesTable --> RouteGroup[Route Group Name]
+    CommodityTable --> CommodityCategory[Commodity Category Name]
+
+    RouteGroup --> BaseRater[Base Rater Permutation Table]
+    CommodityCategory --> BaseRater
+
+    BaseRater --> RatingEngine(Rating Engine)
+    RatingEngine --> ShipmentPricing[Shipment Pricing]
+
+    AdminBroker(Admins and Brokers) --> RoutesTable
+    AdminBroker --> CommodityTable

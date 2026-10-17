@@ -1,0 +1,10 @@
+flowchart LR
+    A["Integration Call"] --> B{"Failure Detected?"}
+    B -- No --> C["Successful Result"]
+    B -- Yes --> D["Retry Attempts"]
+    D -- Success --> A
+    D -- Exhausted --> E["Fallback Path"]
+    E -- Available --> F["Degraded Result"]
+    E -- Not Available --> G{"Kill Switch Enabled?"}
+    G -- Yes --> H["Integration Disabled"]
+    G -- No --> I["Log Error and Alert"]

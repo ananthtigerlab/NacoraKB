@@ -1,0 +1,12 @@
+flowchart LR
+    A["Platform Scans Policies"] --> B{"End Date Approaching?"}
+    B -- Yes --> C["Send Reminder Emails"]
+    C --> D["Broker Initiates Renewal"]
+    D --> E["Complete Renewal Wizard"]
+    E --> F{"Requires Underwriter Approval?"}
+    F -- Yes --> G["Underwriter Approves"]
+    G --> H["New Policy Version Active"]
+    F -- No --> H
+    C -- No Renewal --> I["Policy Expires"]
+    B -- No --> J["Policy Active"]
+    H --> J

@@ -1,0 +1,10 @@
+flowchart LR
+    A[Participant] --> B[Shipment Portal]
+    B --> C[Create Shipment]
+    C --> D[Shipment Draft]
+    D -- Submit for Quote --> E[Shipment Quoted]
+    E -- Book Coverage --> F[Shipment Booked]
+    F -- Download --> G[Certificate]
+    B -- Uses --> J[NacoraHub Platform]
+    J -- Also Accessed By --> I[Back Office]
+    I --> K[Broker and Underwriter]

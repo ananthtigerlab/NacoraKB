@@ -1,0 +1,10 @@
+flowchart LR
+    Admin["Admin"] --> CreateFAQ["Create FAQ Entry"]
+    CreateFAQ --> LinkObject["Link FAQ to Object"]
+    LinkObject --> PageRender["Page Renders"]
+    PageRender --> HasFAQ{"FAQ Attached?"}
+    HasFAQ -- Yes --> ShowIcon["Display Help Icon"]
+    HasFAQ -- No --> NoIcon["No Icon"]
+    ShowIcon --> UserClick["User Clicks Icon"]
+    UserClick --> ShowModal["Show FAQ Modal"]
+    ShowModal --> ReadContent["User Reads Content"]

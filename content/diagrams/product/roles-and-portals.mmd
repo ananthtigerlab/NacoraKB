@@ -1,0 +1,11 @@
+flowchart LR
+    Role["Role: What you do"]
+    Portal["Portal: Where you do it"]
+
+    Role -- "Defines Access" --> Portal
+
+    Participant["Participant"] --> ShipmentPortal["Shipment Portal"]
+    BUA["Broker, Underwriter, Admin"] --> Backoffice["Backoffice"]
+
+    ShipmentPortal -- "Performs" --> SP_Actions["Create, Book, Cancel Shipments"]
+    Backoffice -- "Performs" --> BO_Actions["Configure Policies, Manage Referrals, Admin"]

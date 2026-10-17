@@ -1,0 +1,12 @@
+flowchart LR
+    A[Policy Configuration] --> B[Quote Document Step]
+    A --> C[Certificate Document Step]
+
+    B -- uses --> D[Document Editor]
+    C -- uses --> D
+
+    D -- saves --> E[Quote Template]
+    D -- saves --> F[Certificate Template]
+
+    E -- produces --> G[Quote PDF]
+    F -- produces --> H[Certificate PDF]

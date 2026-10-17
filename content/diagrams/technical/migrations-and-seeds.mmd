@@ -1,0 +1,13 @@
+flowchart LR
+    A[System Initialization] --> B{Code Change};
+
+    B -- Model Definition --> C[Django Migration];
+    C -- makemigrations --> D[Migration File];
+    D -- migrate on deploy --> E[Database Schema];
+
+    B -- Reference Data --> F[Seed Command];
+    F -- create command --> G[Seed Script];
+    G -- run command --> H[Populated Data];
+
+    E --> I[Functional System];
+    H --> I;

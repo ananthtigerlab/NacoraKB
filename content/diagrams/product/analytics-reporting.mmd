@@ -1,0 +1,15 @@
+flowchart LR
+    A[Nacora Events] --> B[Event Processing]
+    B --> C[Kinesis Firehose]
+    C --> D[S3 Data Lake]
+    D --> E[Athena Job]
+    E --> F[Analytics Warehouse]
+
+    G[KN Shipments] --> F
+    H[Claims Data] --> F
+    I[Premium Data] --> F
+    J[Customer Segments] --> F
+    K[FX Rates] --> F
+
+    F --> L[BI Dashboards]
+    L --> M[Users]

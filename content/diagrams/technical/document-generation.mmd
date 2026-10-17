@@ -1,0 +1,21 @@
+flowchart LR
+    Request["Document Request"]
+    Resolve["Resolve Template"]
+    Context["Assemble Context"]
+    Jinja2["Render HTML Jinja2"]
+    QR["Embed QR Code"]
+    PreviewCheck{"Is Preview?"}
+    ReturnHTML["Return HTML Preview"]
+    Weasyprint["Convert to PDF Weasyprint"]
+    Metadata["Add PDF Metadata"]
+    Deliver["Deliver PDF"]
+
+    Request --> Resolve
+    Resolve --> Context
+    Context --> Jinja2
+    Jinja2 --> QR
+    QR --> PreviewCheck
+    PreviewCheck -- Yes --> ReturnHTML
+    PreviewCheck -- No --> Weasyprint
+    Weasyprint --> Metadata
+    Metadata --> Deliver

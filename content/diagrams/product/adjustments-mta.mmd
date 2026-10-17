@@ -1,0 +1,22 @@
+flowchart LR
+    A["Active Policy"]
+    B["Broker Initiates Endorsement"]
+    C["Endorsement Wizard Opens"]
+    D["Enter MTA Details"]
+    E["Make Policy Changes"]
+    F{"Save Draft?"}
+    G["MTA in Progress Policy"]
+    H["Confirm Endorsement"]
+    I["New Policy Version Active"]
+    J["Previous Version Preserved"]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F -- Yes --> G
+    G --> E
+    F -- No --> H
+    H --> I
+    H --> J

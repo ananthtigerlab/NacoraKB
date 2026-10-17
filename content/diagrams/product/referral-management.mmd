@@ -1,0 +1,20 @@
+flowchart LR
+    Shipment["Shipment"]
+    RuleTrigger["Business Rule Triggers"]
+    ReferralCreate["Referral Created"]
+    ShipmentHold["Shipment On Hold"]
+    UnderwriterReview["Underwriter Reviews"]
+    AskParticipant{"Ask Participant?"}
+    ParticipantInfo["Participant Provides Info"]
+    UnderwriterDecide["Underwriter Decides"]
+    ReferralClose["Referral Closed"]
+
+    Shipment --> RuleTrigger
+    RuleTrigger --> ReferralCreate
+    ReferralCreate --> ShipmentHold
+    ShipmentHold --> UnderwriterReview
+    UnderwriterReview --> AskParticipant
+    AskParticipant -- Yes --> ParticipantInfo
+    ParticipantInfo --> UnderwriterReview
+    AskParticipant -- No --> UnderwriterDecide
+    UnderwriterDecide -- Approved or Declined --> ReferralClose

@@ -1,0 +1,31 @@
+flowchart LR
+    UserSystem[User or System]
+    CeleryBeat[Celery Beat]
+    CeleryApp[Celery Application]
+    RabbitMQ[RabbitMQ Broker]
+    DefaultQ[Default Queue]
+    SequentialQ[Sequential Queue]
+    AuditQ[Audit Trail Queue]
+    CeleryWorker[Celery Worker]
+    AuditWorker[Audit Trail Worker]
+    TaskExec[Task Execution]
+    DynamoDB[DynamoDB]
+    Sentry[Sentry]
+
+    UserSystem --> CeleryApp
+    CeleryBeat --> CeleryApp
+    CeleryApp --> RabbitMQ
+
+    RabbitMQ -- routes to --> DefaultQ
+    RabbitMQ -- routes to --> SequentialQ
+    RabbitMQ -- routes to --> AuditQ
+
+    DefaultQ --> CeleryWorker
+    SequentialQ --> CeleryWorker
+    AuditQ --> AuditWorker
+
+    CeleryWorker --> TaskExec
+    AuditWorker --> TaskExec
+
+    TaskExec -- audit events --> DynamoDB
+    TaskExec -- on failure --> Sentry

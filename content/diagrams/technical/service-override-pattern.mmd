@@ -1,0 +1,15 @@
+flowchart LR
+    A["Base Platform"]
+    B["Defines Override Slot"]
+    C["Default Service"]
+    D["Nacora Settings"]
+    E["Nacora Custom Class"]
+    F["Service Loader"]
+    G["Service Used at Runtime"]
+
+    A --> B
+    B --> C
+    D -- "Registers Path" --> E
+    E -- "Configures" --> F
+    C -- "Fallback" --> F
+    F -- "Resolves and Provides" --> G

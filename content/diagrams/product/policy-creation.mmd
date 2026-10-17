@@ -1,0 +1,22 @@
+flowchart LR
+    A[Prerequisites]
+    B[Start Wizard]
+    C[Phase 1 Form Steps]
+    D[Phase 2 Config Steps]
+    E{All Steps Complete?}
+    F[Save and Exit]
+    G[Incomplete Policy]
+    H[Activate Policy]
+    I[Activated Policy]
+
+    A --> B
+    B --> C
+    C --> D
+    C --> F
+    D --> F
+    F --> G
+    G --> B
+    D --> E
+    E -- Yes --> H
+    E -- No --> G
+    H --> I

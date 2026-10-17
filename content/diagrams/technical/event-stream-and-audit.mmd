@@ -1,0 +1,10 @@
+flowchart LR
+    Signals[Django Post-Save Signals] --> Analytics[Analytics Event Stream];
+    Signals --> Audit[Audit Trail];
+
+    Analytics --> KinesisS3[Kinesis and S3];
+    KinesisS3 --> Athena[Athena Warehouse];
+    Athena --> BIDashboards[BI Dashboards];
+
+    Audit --> DynamoDB[DynamoDB];
+    DynamoDB --> AuditUI[Audit UI and API];

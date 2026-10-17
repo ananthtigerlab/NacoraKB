@@ -1,0 +1,12 @@
+flowchart LR
+    Admin["Administrator"] -->|Maintains| SurveyorGroup["Surveyor Group"]
+
+    Producer["Producer"] -->|Selects for| Policy["Policy"]
+    SurveyorGroup -->|Assigned to| Policy
+
+    Policy -->|Issues| Certificate["Certificate"]
+    SurveyorGroup -- Details Snapshotted --> Certificate
+
+    Certificate -->|Provided to| Participant["Participant"]
+    Participant -->|Initiates| Claim["Claim"]
+    Claim -->|Contacts| SurveyorGroup

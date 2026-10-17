@@ -1,0 +1,19 @@
+flowchart LR
+    Participant[Participant] --> P_Shipment[Shipment Lifecycle]
+    P_Shipment --> P_Declare[Declare Quote Book]
+    P_Shipment --> P_Amend[Amend Shipment]
+    P_Shipment --> P_Cancel[Request Cancellation]
+    P_Shipment --> P_Referral[Respond to Referral]
+
+    Broker[Broker] --> B_Policy[Policy Configuration]
+    Broker --> B_Submit[Submit on Behalf]
+    Broker --> B_ApproveCancel[Approve Cancellation]
+
+    Underwriter[Underwriter] --> U_Referral[Resolve Referrals]
+    Underwriter --> U_Rates[Approve Special Rates]
+
+    Administrator[Administrator] --> A_Admin[System Administration]
+    Administrator --> A_User[Approve User Signups]
+
+    P_Cancel --> B_ApproveCancel
+    P_Referral --> U_Referral

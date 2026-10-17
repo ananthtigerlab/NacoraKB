@@ -1,0 +1,9 @@
+flowchart LR
+    A[Django Process Start] --> B[Load Nacora Settings]
+    B --> C[Import Base Settings]
+    C --> D[Apply Nacora Overrides]
+    D --> E{Local Settings Module Set?}
+    E -- Yes --> F[Load Env Overlay]
+    E -- No --> G[Apply Env Vars]
+    F --> G
+    G --> H[Final Configuration]

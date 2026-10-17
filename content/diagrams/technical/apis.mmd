@@ -1,0 +1,15 @@
+flowchart LR
+    Frontend["Frontend Engineers"] --> RESTv1["REST API v1"]
+    Frontend --> RESTv3["REST API v3"]
+
+    KN["K+N Systems"] --> SOAP["SOAP Inbound"]
+
+    RESTv1 -- Nacora Specific --> InternalLogic["Nacora Internal Logic"]
+    RESTv3 -- Shared Platform --> InternalLogic
+    SOAP -- K+N Integration --> InternalLogic
+
+    InternalLogic --> Webhooks["Outbound Webhooks"]
+    Webhooks --> ExternalSystems["External Systems"]
+
+    InternalLogic --> ThirdPartyCalls["Third Party API Calls"]
+    ThirdPartyCalls --> ExternalServices["External Services"]

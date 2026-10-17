@@ -1,0 +1,16 @@
+flowchart LR
+    Submitter[Submitter] --> CreateRequest[Create Request Form]
+    CreateRequest --> SpecialRequest[Special Rate Request]
+
+    SpecialRequest -- reviewed by --> Underwriter[Underwriter]
+
+    Underwriter -- approves --> ApprovedRate[Approved Special Rate]
+    Underwriter -- declines --> Declined[Declined Request]
+
+    ApprovedRate -- consumed by --> SpecialRater[Special Rater]
+    BaseRater[Base Rater]
+
+    SpecialRater -- overrides --> RatingEngine[Rating Engine]
+    BaseRater -- default for --> RatingEngine
+
+    RatingEngine -- prices --> Shipment[Shipment]

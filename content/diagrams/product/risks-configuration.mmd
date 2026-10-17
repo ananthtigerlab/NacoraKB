@@ -1,0 +1,15 @@
+flowchart LR
+    Wizard[Policy Creation Wizard] --> RisksConfig[Risks Configuration]
+
+    RisksConfig -- Configures --> Conveyance[Conveyance Modes]
+    RisksConfig -- Configures --> Packing[Packing Types]
+    RisksConfig -- Configures --> Coverages[Coverage Types]
+    RisksConfig -- Configures --> Commodity[Commodity Groups]
+    RisksConfig -- Uses --> Countries[Countries List]
+
+    RisksConfig --> Rating[Rating Engine]
+    RisksConfig --> Clauses[Clauses Configuration]
+    RisksConfig --> ShipmentForm[Shipment Submission Form]
+
+    Rating -- No Rate Match --> Referrals[Shipment Referrals]
+    Conveyance -- Backdating Exceeded --> Referrals

@@ -1,0 +1,6 @@
+flowchart LR
+    Define[Define Flag] --> Base[Base Platform Settings]
+    Base --> Nacora[Nacora Client Settings]
+    Nacora --> Overlay[Per Environment Overlay]
+    Overlay --> EnvVar[Runtime Environment Variable]
+    EnvVar --> AppCode[Application Code Reads Flag]

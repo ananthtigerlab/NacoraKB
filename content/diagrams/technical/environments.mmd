@@ -1,0 +1,17 @@
+flowchart LR
+    BaseDefaults["Base Defaults"]
+    ClientOverrides["Client Overrides"]
+    EnvOverlay["Env Overlay File"]
+    RuntimeEnvVars["Runtime Env Variables"]
+    VaultSecrets["Vault Secrets"]
+
+    BaseDefaults --> ClientOverrides
+    ClientOverrides -- defines defaults --> EnvOverlay
+    EnvOverlay -- applies specific --> RuntimeEnvVars
+
+    VaultSecrets --> RuntimeEnvVars
+
+    RuntimeEnvVars --> FinalConfig["Final Configuration"]
+
+    FinalConfig -- used by --> Dev
+    FinalConfig -- used by --> Staging

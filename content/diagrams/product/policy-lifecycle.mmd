@@ -1,0 +1,18 @@
+flowchart LR
+    Draft["Draft"]
+    Quote["Quote"]
+    ConfigComplete["Config Complete"]
+    Active["Active"]
+    ActiveMTA["Active MTA in Progress"]
+    Cancelled["Cancelled"]
+    Expired["Expired"]
+
+    Draft -- Broker saves --> Quote
+    Quote -- Broker completes steps --> ConfigComplete
+    ConfigComplete -- Broker activates --> Active
+    Active -- Broker endorses --> ActiveMTA
+    ActiveMTA -- Broker publishes --> Active
+    Active -- System cancels --> Cancelled
+    ActiveMTA -- System cancels --> Cancelled
+    Active -- System expires --> Expired
+    ActiveMTA -- System expires --> Expired

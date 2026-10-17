@@ -1,0 +1,10 @@
+flowchart LR
+    A[Quote Configuration Complete] --> B[Choose Configuration Step]
+    B --> C[Configure Step Details]
+    C --> D{Step Prerequisites Met?}
+    D -- Yes --> E[Mark Step as Complete]
+    E --> B
+    D -- No --> C
+    E -- All Steps Complete --> F[Save and Exit Wizard]
+    F --> G[Policy Detail Page]
+    G -- Activate Policy --> H[Policy Activated]

@@ -1,0 +1,9 @@
+flowchart LR
+    ChoicesModule[Choices Module] --> CoveragesTab[Coverages Tab]
+    Insurer[Insurer Agreement] --> CoveragesTab
+    RatingTables[Rating Tables] --> CoveragesTab
+
+    CoveragesTab --> Pricing[Pricing]
+    CoveragesTab --> BusinessRules[Business Rules]
+    CoveragesTab --> Certificate[Certificate Clauses]
+    CoveragesTab --> ShipmentForm[Shipment Form]

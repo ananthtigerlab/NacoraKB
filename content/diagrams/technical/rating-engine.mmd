@@ -1,0 +1,12 @@
+flowchart LR
+    A[Incoming Rate Request] --> B[Payload Assembly]
+    B --> C[Base Rater Lookup]
+    C --> D[SRR Override]
+    D --> E{Business Rules}
+    E -- Referral or Decline --> F[Update Status]
+    E -- Continue Pricing --> G[Cargo Premium Calc]
+    G --> H[Charges Application]
+    H --> I[FX Conversion]
+    I --> J[Persist Breakdown]
+    J --> K[Priced Quote]
+    F --> K

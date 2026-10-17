@@ -1,0 +1,22 @@
+flowchart LR
+    AppCode["Application Code"]
+    Beat["Beat Scheduler"]
+    Broker["RabbitMQ Broker"]
+    Queues["Task Queues"]
+    Worker["Celery Worker"]
+    Execute["Task Execution"]
+    Success["Success"]
+    Failure{"Failure?"}
+    Retry["Retry Policy"]
+    DeadLetter["Dead Letter"]
+
+    AppCode --> Broker
+    Beat --> Broker
+    Broker --> Queues
+    Queues --> Worker
+    Worker --> Execute
+    Execute --> Failure
+    Failure -- Yes --> Retry
+    Failure -- No --> Success
+    Retry -- Requeue --> Queues
+    Retry -- Persistent Failure --> DeadLetter

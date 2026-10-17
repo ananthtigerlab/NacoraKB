@@ -1,0 +1,14 @@
+flowchart LR
+    User --> Login[User Login]
+    Login --> DjangoApp[Django Application]
+    DjangoApp -- Creates Session --> Redis[Redis Session Store]
+    DjangoApp -- Enforces --> Cookie[Cookie Flags]
+    DjangoApp -- Tracks Activity --> Idle[Idle Timeout Middleware]
+    DjangoApp -- Manages Policy --> Concurrent[Concurrent Login]
+
+    Idle -- Triggers Warning or Invalidation --> User
+    Concurrent -- Invalidates Other Sessions --> Redis
+    Revoke[Session Revocation] -- Deletes Session Key --> Redis
+
+    Redis -- Session Missing --> Invalid[Session Invalidated]
+    Invalid --> User -- Requires Re-login --> Login

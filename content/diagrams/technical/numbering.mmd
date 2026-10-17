@@ -1,0 +1,11 @@
+flowchart LR
+    A[Model with NumberingMixin] --> B{Generate Number};
+
+    B -- Generic Numbering --> C[Lock Counter Row];
+    C --> D[Update Counter Table];
+    D --> E[Apply Format Pattern];
+    E --> F[Return Formatted Number];
+
+    B -- Shipment Numbering --> G[Shipment Numbering Service];
+    G --> H[Update Policy Extra Data];
+    H --> E;

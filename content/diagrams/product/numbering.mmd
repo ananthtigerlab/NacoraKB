@@ -1,0 +1,15 @@
+flowchart LR
+    Records[Numbered Records] --> Auto[Auto Assigned]
+    Records --> Tenant[Unique per Tenant]
+    Records --> Types[Record Types]
+
+    Types --> Prefix[Has Prefix Pattern]
+    Types --> Scope[Has Counter Scope]
+
+    Types --> Policy[Policy]
+    Types --> Shipment[Shipment]
+    Types --> Certificate[Certificate]
+
+    Policy --> PolicyScope[Deployment Wide]
+    Shipment --> ShipScope[Per Policy Version]
+    Certificate --> CertEdit[Editable at Issuance]

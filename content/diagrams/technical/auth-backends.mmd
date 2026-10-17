@@ -1,0 +1,13 @@
+flowchart LR
+    Start[Authentication Request] --> LoginB[Login Backend]
+    LoginB -- Success --> Authenticated[User Authenticated]
+    LoginB -- Fail --> EmailTokenB[Email Token Backend]
+    EmailTokenB -- Success --> Authenticated
+    EmailTokenB -- Fail --> OAuth2B[OAuth2 Backend]
+    OAuth2B -- Success --> Authenticated
+    OAuth2B -- Fail --> OIDCB[OIDC Backend]
+    OIDCB -- Success --> Authenticated
+    OIDCB -- Fail --> Failed[Authentication Failed]
+
+    Authenticated --> Session[Set Session Cookie]
+    Session --> User[Populate Request.user]

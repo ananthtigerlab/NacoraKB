@@ -1,0 +1,21 @@
+flowchart LR
+    A["Choices Module"]
+    B["Departure and Destination Tabs"]
+    C["Rating Configuration"]
+    D["Routes Lookup Table"]
+    E["Custom Business Rules"]
+    F["Shipment Form"]
+    G["Administrator"]
+    H["Broker"]
+    I["Participant"]
+
+    G --> A
+    A --> B
+    A --> F
+    B --> C
+    C --> D
+    H --> D
+    H --> E
+    D --> F
+    E --> F
+    F --> I

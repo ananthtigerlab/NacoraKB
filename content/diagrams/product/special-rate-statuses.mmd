@@ -1,0 +1,14 @@
+flowchart LR
+    Draft["Draft"]
+    Pending["Pending Approval"]
+    Approved["Approved"]
+    InUse["In Use"]
+    Declined["Declined"]
+    Expired["Expired"]
+
+    Draft -- "Author Submits" --> Pending
+    Pending -- "Back Office Approves All" --> Approved
+    Pending -- "Back Office Declines" --> Declined
+    Pending -- "Back Office Sends Back" --> Draft
+    Approved -- "First Shipment Uses" --> InUse
+    InUse -- "Rate Expires" --> Expired

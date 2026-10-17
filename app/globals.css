@@ -1,0 +1,369 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Design tokens — PRD §10.3
+  Deep marine blue on a warm off-white. Deliberately low-contrast surfaces,
+  high-contrast text — reads long-form without eye fatigue.
+  All colours expressed as HSL triplets so Tailwind's `hsl(var(...) / <alpha>)` works.
+*/
+@layer base {
+  :root {
+    /* Nacora Blue — deep marine blue */
+    --color-primary: 217 85% 27%;             /* #0A3A82 */
+    --color-primary-foreground: 0 0% 100%;
+    /* Brighter sea-blue — links, highlights, focus */
+    --color-primary-accent: 205 96% 38%;      /* #0577BE — slightly darker, better contrast */
+    --color-primary-accent-foreground: 0 0% 100%;
+    /* Surfaces */
+    --color-surface: 40 33% 99%;              /* #FDFCFA — warm off-white, easier on eyes */
+    --color-surface-muted: 214 32% 96%;       /* #F1F5F9 */
+    /* Text — near-black with a hint of navy */
+    --color-text: 220 26% 14%;                /* #1B2231 */
+    --color-text-muted: 214 15% 38%;          /* #545E71 */
+    --color-text-subtle: 214 12% 55%;         /* #7C8492 */
+    /* Borders / dividers */
+    --color-border: 214 26% 88%;              /* #DBE1EA */
+    --color-border-muted: 214 32% 93%;        /* #E8EDF3 */
+    /* Semantic */
+    --color-warning: 32 88% 45%;              /* #D6870F — conflict / stale flags */
+    --color-success: 145 55% 32%;             /* #257E48 — merged / synced */
+    --color-danger: 0 65% 47%;                /* #C62828 — reject / destructive */
+
+    --radius: 0.5rem;
+
+    /* Reading typography */
+    --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-heading: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    --reading-max: 72ch;
+    --reading-scale: 1;                      /* user-adjustable, wired via FontSizeControl */
+  }
+
+  * {
+    @apply border-border;
+  }
+  html, body, #__next {
+    height: 100%;
+  }
+  html {
+    font-size: 16.5px;                       /* base up from 16 so BlockNote rem sizing lands comfortably */
+    text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-surface text-text antialiased;
+    font-family: var(--font-body);
+    font-feature-settings: 'rlig' 1, 'calt' 1, 'ss01' 1;
+    line-height: 1.65;
+    letter-spacing: -0.005em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Visible focus ring for keyboard users (PRD §10.1: accessible by default) */
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-surface;
+  }
+
+  /* Selection */
+  ::selection {
+    background: hsl(var(--color-primary-accent) / 0.20);
+    color: hsl(var(--color-text));
+  }
+
+  /* Search result highlighting */
+  mark {
+    background: hsl(var(--color-primary-accent) / 0.18);
+    color: hsl(var(--color-text));
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+
+  /* Mermaid diagrams — scale down on narrow columns, keep readable */
+  .nacora-diagram svg {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/*
+  Anchor-link landing flash — applied when a user opens a #h-<blockId> URL or copies one.
+  Deliberately outside any @layer so it wins the cascade against Tailwind/BlockNote layers.
+  The class stays on for 3s (JS removes it); the transition fades the highlight when it goes.
+*/
+.nacora-anchor-flash {
+  background-color: hsl(var(--color-primary-accent) / 0.35) !important;
+  box-shadow: 0 0 0 6px hsl(var(--color-primary-accent) / 0.30) !important;
+  outline: 2px solid hsl(var(--color-primary-accent)) !important;
+  outline-offset: 2px !important;
+  border-radius: 6px !important;
+  transition: background-color 800ms ease-out, box-shadow 800ms ease-out, outline-color 800ms ease-out !important;
+}
+
+/* ---------------------------------------------------------------------------
+   BlockNote editor — page content styling
+   BlockNote 0.51 uses Mantine styling; we override the presentation to match
+   the reading-focused design. Every rule is scoped under `.nacora-reading` so it
+   never leaks into the sidebar / topbar / dialogs.
+   --------------------------------------------------------------------------- */
+@layer components {
+  .nacora-reading {
+    font-family: var(--font-body);
+    font-size: calc(1.0625rem * var(--reading-scale));  /* base ~17.5px, scaled by user */
+    line-height: 1.6;
+    color: hsl(var(--color-text));
+    max-width: var(--reading-max);
+  }
+  .nacora-reading .bn-editor {
+    padding: 0 !important;
+  }
+  .nacora-reading .bn-container {
+    background: transparent;
+  }
+
+  /* Collapse BlockNote's default outer-block spacing — its default is generous
+     because it reserves room for the drag/insert affordance. We tighten it and
+     keep the block-content margins in charge of rhythm. */
+  .nacora-reading .bn-block-outer,
+  .nacora-reading .bn-block-group .bn-block-outer {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .nacora-reading .bn-block {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .nacora-reading .bn-block-content {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    min-height: 0 !important;
+  }
+
+  /* Block spacing — tight but readable */
+  .nacora-reading [data-content-type="paragraph"] {
+    margin-top: 0.35em;
+    margin-bottom: 0.35em;
+  }
+  .nacora-reading [data-content-type="bulletListItem"],
+  .nacora-reading [data-content-type="numberedListItem"],
+  .nacora-reading [data-content-type="checkListItem"] {
+    margin-top: 0.15em;
+    margin-bottom: 0.15em;
+  }
+
+  /* Headings — clear hierarchy, but not over-spaced */
+  .nacora-reading [data-content-type="heading"] {
+    font-family: var(--font-heading);
+    color: hsl(var(--color-text));
+    letter-spacing: -0.015em;
+    font-weight: 650;
+    line-height: 1.25;
+  }
+  .nacora-reading [data-content-type="heading"][data-level="1"] {
+    font-size: 1.8em;
+    margin-top: 1.4em;
+    margin-bottom: 0.5em;
+    padding-bottom: 0.3em;
+    border-bottom: 1px solid hsl(var(--color-border-muted));
+  }
+  .nacora-reading [data-content-type="heading"][data-level="2"] {
+    font-size: 1.35em;
+    margin-top: 1.2em;
+    margin-bottom: 0.35em;
+    color: hsl(var(--color-primary));
+  }
+  .nacora-reading [data-content-type="heading"][data-level="3"] {
+    font-size: 1.1em;
+    margin-top: 0.9em;
+    margin-bottom: 0.25em;
+    font-weight: 600;
+    color: hsl(var(--color-text));
+  }
+  /* Plain-HTML headings (from the AI answer markdown renderer) get the same treatment */
+  .nacora-reading h1, .nacora-reading h2, .nacora-reading h3, .nacora-reading h4 {
+    font-family: var(--font-heading);
+    color: hsl(var(--color-text));
+    letter-spacing: -0.015em;
+    font-weight: 650;
+    line-height: 1.25;
+  }
+  .nacora-reading h1 {
+    font-size: 1.8em; margin-top: 1.4em; margin-bottom: 0.5em;
+    padding-bottom: 0.3em; border-bottom: 1px solid hsl(var(--color-border-muted));
+  }
+  .nacora-reading h2 {
+    font-size: 1.35em; margin-top: 1.2em; margin-bottom: 0.35em;
+    color: hsl(var(--color-primary));
+  }
+  .nacora-reading h3 {
+    font-size: 1.1em; margin-top: 0.9em; margin-bottom: 0.25em;
+    font-weight: 600;
+  }
+  .nacora-reading h4 {
+    font-size: 1em; margin-top: 0.7em; margin-bottom: 0.2em;
+    font-weight: 600; color: hsl(var(--color-text-subtle));
+  }
+  /* Body text within blocks */
+  .nacora-reading p,
+  .nacora-reading li {
+    color: hsl(var(--color-text));
+  }
+
+  /* Inline emphasis */
+  .nacora-reading strong { font-weight: 650; color: hsl(var(--color-text)); }
+  .nacora-reading em { font-style: italic; }
+  .nacora-reading a {
+    color: hsl(var(--color-primary-accent));
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: hsl(var(--color-primary-accent) / 0.4);
+    transition: text-decoration-color 120ms ease;
+  }
+  .nacora-reading a:hover {
+    text-decoration-color: hsl(var(--color-primary-accent));
+  }
+
+  /* Inline code */
+  .nacora-reading code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: hsl(var(--color-surface-muted));
+    color: hsl(var(--color-primary));
+    padding: 0.12em 0.4em;
+    border-radius: 4px;
+    border: 1px solid hsl(var(--color-border-muted));
+  }
+
+  /* Lists */
+  .nacora-reading ul, .nacora-reading ol {
+    padding-left: 1.5rem;
+  }
+  .nacora-reading ul li::marker { color: hsl(var(--color-primary-accent)); }
+  .nacora-reading ol li::marker { color: hsl(var(--color-primary-accent)); font-weight: 600; }
+  .nacora-reading li p { margin: 0 !important; }
+  .nacora-reading li li { margin-top: 0.1em; margin-bottom: 0.1em; }
+  /* BlockNote wraps each list item; strip the wrapper padding */
+  .nacora-reading [data-content-type="bulletListItem"] > *,
+  .nacora-reading [data-content-type="numberedListItem"] > *,
+  .nacora-reading [data-content-type="checkListItem"] > * {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Blockquote / quote */
+  .nacora-reading blockquote,
+  .nacora-reading [data-content-type="quote"] {
+    border-left: 3px solid hsl(var(--color-primary-accent));
+    padding: 0.4rem 0 0.4rem 1rem;
+    color: hsl(var(--color-text-muted));
+    font-style: italic;
+    margin: 1rem 0;
+    background: hsl(var(--color-surface-muted) / 0.5);
+    border-radius: 0 4px 4px 0;
+  }
+
+  /* Horizontal rules */
+  .nacora-reading hr {
+    border: 0;
+    border-top: 1px solid hsl(var(--color-border));
+    margin: 2rem 0;
+  }
+
+  /* ---------- Tables ---------- */
+  .nacora-reading [data-content-type="table"] {
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  .nacora-reading table,
+  .nacora-reading [data-content-type="table"] table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.94em;
+    line-height: 1.5;
+    border: 1px solid hsl(var(--color-border));
+    border-radius: 6px;
+    overflow: hidden;
+    background: hsl(var(--color-surface));
+  }
+  .nacora-reading th,
+  .nacora-reading td {
+    padding: 0.6rem 0.85rem;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid hsl(var(--color-border-muted));
+    border-right: 1px solid hsl(var(--color-border-muted));
+  }
+  .nacora-reading th:last-child,
+  .nacora-reading td:last-child {
+    border-right: none;
+  }
+  .nacora-reading tr:last-child td {
+    border-bottom: none;
+  }
+  .nacora-reading thead th,
+  .nacora-reading th {
+    background: hsl(var(--color-surface-muted));
+    color: hsl(var(--color-primary));
+    font-weight: 600;
+    font-size: 0.88em;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    border-bottom: 2px solid hsl(var(--color-border));
+  }
+  .nacora-reading tbody tr:nth-child(even) td {
+    background: hsl(var(--color-surface-muted) / 0.35);
+  }
+  .nacora-reading tbody tr:hover td {
+    background: hsl(var(--color-primary-accent) / 0.06);
+  }
+
+  /* Prevent BlockNote's internal cell wrapper from breaking layout */
+  .nacora-reading [data-content-type="tableCell"] p,
+  .nacora-reading [data-content-type="tableHeader"] p {
+    margin: 0;
+  }
+
+  /* Code blocks */
+  .nacora-reading pre,
+  .nacora-reading [data-content-type="codeBlock"] {
+    background: hsl(var(--color-text) / 0.96);
+    color: hsl(var(--color-surface));
+    padding: 1rem 1.15rem;
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    line-height: 1.55;
+    overflow-x: auto;
+    margin: 1.2rem 0;
+  }
+  .nacora-reading pre code {
+    background: transparent;
+    color: inherit;
+    border: none;
+    padding: 0;
+  }
+
+  /* First block on the page has no top margin */
+  .nacora-reading .bn-block-outer:first-child [data-content-type="heading"],
+  .nacora-reading .bn-block-outer:first-child [data-content-type="paragraph"] {
+    margin-top: 0;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { @apply bg-border rounded-full; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+
+  /* Container class for prose that isn't inside BlockNote (e.g. sidebar callouts) */
+  .prose-reading {
+    max-width: var(--reading-max);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: hsl(var(--color-text));
+  }
+}

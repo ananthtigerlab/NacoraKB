@@ -1,0 +1,10 @@
+flowchart LR
+    A["Broker or Participant"] --> B["Log Claim"]
+    B --> C["Server Processes Claim"]
+    C --> D["Create Claim Record"]
+    D -- links --> E["Attach Evidence"]
+    D -- triggers --> F["Notify Underwriter"]
+    F --> G["Underwriter or Admin"]
+    G -- views --> H["View Claims Queue"]
+    H -- Admin action --> I["Manual Handoff"]
+    I -- to --> J["Sister Claims System"]

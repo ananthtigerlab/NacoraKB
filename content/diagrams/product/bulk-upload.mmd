@@ -1,0 +1,12 @@
+flowchart LR
+    User[User] --> Start[Initiate Bulk Operation]
+    Start --> Type{Operation Type?}
+
+    Type -- Shipments --> UploadShipments[Upload Shipment Data]
+    UploadShipments --> CreateShipments[Create Booked Shipments]
+
+    Type -- Special Rates --> UploadRates[Upload Special Rates]
+    UploadRates --> CreateRates[Create Special Rates]
+
+    Type -- Rerate --> SelectShipments[Select Existing Shipments]
+    SelectShipments --> RerateAction[Rerun Rating]

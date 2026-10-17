@@ -1,0 +1,18 @@
+flowchart LR
+    Users["Admin, Underwriter, Broker"]
+    ManageRules["Create, Edit, Activate Rules"]
+    PolicyVersion["Policy Version"]
+    ShipmentQuote["Shipment Quoted"]
+    EvaluateRules["Evaluate Rules"]
+    Conditions{"Conditions Match?"}
+    ApplyActions["Apply Rule Actions"]
+    FinalQuote["Final Quote Outcome"]
+
+    Users --> ManageRules
+    ManageRules --> PolicyVersion
+    PolicyVersion --> EvaluateRules
+    ShipmentQuote --> EvaluateRules
+    EvaluateRules --> Conditions
+    Conditions -- Yes --> ApplyActions
+    Conditions -- No --> FinalQuote
+    ApplyActions --> FinalQuote

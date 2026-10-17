@@ -1,0 +1,15 @@
+flowchart LR
+    Participant[Participant] --> ReqCancel{Request Cancel}
+    ReqCancel -- Arrival Flag --> Review[Review Request]
+    Review -- Approve --> ShipCancelled[Shipment Cancelled]
+    Review -- Reject --> ShipBooked[Shipment Booked]
+
+    BackOffice[Back Office] -- Direct Cancel --> ShipCancelled
+
+    Broker[Broker] --> InitPolicy{Initiate Policy Cancel}
+    InitPolicy -- Future Date --> PolicyCancelled[Policy Cancelled]
+
+    ShipCancelled --> Billing[Billing Adjustments]
+    PolicyCancelled --> Billing
+    ShipCancelled --> Audit[Audit Trail]
+    PolicyCancelled --> Audit

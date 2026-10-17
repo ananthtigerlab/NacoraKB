@@ -1,0 +1,10 @@
+flowchart LR
+    A["Start Quote Creation"] --> B["Select Policy"]
+    B --> C["Enter Assured Details"]
+    C --> D["Enter Trip Details"]
+    D --> E["Enter Cargo Details"]
+    E --> F["Rate Declaration"]
+    F --> G["Return Quote"]
+    G --> H{"Quote Action?"}
+    H -- "Book" --> I["Live Cover"]
+    H -- "Other" --> J["Edit, Refer, Cancel, Expire"]

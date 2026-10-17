@@ -1,0 +1,23 @@
+flowchart LR
+    BP["Business Partner"]
+    BPRole["BP Role"]
+    Address["Address"]
+    User["User Account"]
+    Contract["Contract"]
+    Policy["Policy"]
+    PolicyStatus["Policy Status"]
+    PolicyVersion["Policy Version"]
+    Shipment["Shipment"]
+    Quotation["Quotation"]
+
+    BP --> BPRole
+    BP --> Address
+    BP --> User
+    BP -- "is Agent or Insurer" --> Contract
+    BP -- "is Holder or Agent" --> Policy
+
+    Contract --> Policy
+    Policy --> PolicyStatus
+    Policy --> PolicyVersion
+    PolicyVersion --> Shipment
+    PolicyVersion --> Quotation

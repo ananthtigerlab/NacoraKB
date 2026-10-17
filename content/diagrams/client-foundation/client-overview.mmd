@@ -1,0 +1,18 @@
+flowchart LR
+    KNGroup["Kuehne Nagel Group"] --> Nacora["Nacora"]
+
+    Nacora --> BrokerSide["Broker Side"]
+    Nacora --> MGASide["MGA Side"]
+
+    BrokerSide --> NBMS["NBMS Broker System"]
+    MGASide --> NacoraHub["NacoraHub MGA System"]
+
+    Insurer["Insurer"] --> MGASide
+    Policyholder["Policyholder"] --> MGASide
+
+    NacoraHub --> BackOffice["Back Office Portal"]
+    NacoraHub --> ShipmentPortal["Shipment Portal"]
+
+    Participant["Participant"] --> ShipmentPortal
+
+    MGASide -- "Emits Bordereau" --> NBMS

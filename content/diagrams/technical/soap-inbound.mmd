@@ -1,0 +1,14 @@
+flowchart LR
+    A[K+N System] --> B[SOAP Endpoint]
+    B --> C{Authenticate Request}
+    C -- Success --> D[Dispatch Operation]
+    C -- Fault --> J[Return SOAP Response]
+    D --> E{Is Write Operation?}
+    E -- Yes --> F[Idempotency Check]
+    F -- New Request --> G[Translate Codes]
+    F -- Replay Cached --> J
+    F -- Processing --> J
+    E -- No --> G
+    G --> H[Lookup Policy]
+    H --> I[Execute Operation]
+    I --> J

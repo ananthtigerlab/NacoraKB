@@ -1,0 +1,14 @@
+flowchart LR
+    NacoraApp[Django Application] --> Redis[Redis Cache Layer]
+
+    Redis --> DjangoCache[Django Cache Framework]
+    Redis --> SessionStore[Session Store]
+
+    DjangoCache --> PDMToken[PDM OAuth2 Tokens]
+    DjangoCache --> GeoRisk[GeoRisk Parties]
+    DjangoCache --> FXRates[FX Rates]
+    DjangoCache --> Choices[Choices Catalogue]
+
+    Redis -- Managed by --> ReadThrough[Read-through Pattern]
+    Redis -- Invalidated by --> SignalInv[Signal Invalidation]
+    Redis -- Invalidated by --> ManualInv[Manual Invalidation]

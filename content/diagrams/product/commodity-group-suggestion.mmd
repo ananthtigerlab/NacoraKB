@@ -1,0 +1,26 @@
+flowchart LR
+    User["User Enters Cargo Text"]
+    Service["Classification Service"]
+    BedrockCall["Call AWS Bedrock"]
+    BedrockOK{"Bedrock Success?"}
+    TwoStage["Two-Stage Ranking"]
+    Filter["Filter Suggestions"]
+    EmbedSearch["Embedding Search"]
+    EmptyList["Empty List"]
+    Display["Display Suggestions"]
+    Confirm["User Confirms Pick"]
+    Rating["Used by Rating Engine"]
+
+    User --> Service
+    Service --> BedrockCall
+    BedrockCall --> BedrockOK
+    BedrockOK -- Yes --> TwoStage
+    TwoStage --> Filter
+    Filter --> Display
+    Display --> Confirm
+    Confirm --> Rating
+
+    BedrockOK -- No --> EmbedSearch
+    EmbedSearch -- Success --> Display
+    EmbedSearch -- Fails --> EmptyList
+    EmptyList --> Display

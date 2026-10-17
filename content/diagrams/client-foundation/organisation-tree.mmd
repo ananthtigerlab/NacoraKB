@@ -1,0 +1,11 @@
+flowchart LR
+    InsuranceCo["Insurance Company"]
+    BrokerCompany["Broker Company"]
+    Policyholder["Policyholder"]
+    ParticipantCompany["Participant Company"]
+    ParticipantUser["Participant User"]
+
+    InsuranceCo -- Underwrites --> BrokerCompany
+    BrokerCompany -- Brokers for --> Policyholder
+    Policyholder -- Contains --> ParticipantCompany
+    ParticipantCompany -- Has --> ParticipantUser

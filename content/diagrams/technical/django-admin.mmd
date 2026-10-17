@@ -1,0 +1,16 @@
+flowchart LR
+    User[Admin User] --> Router{URL Routing}
+
+    Router -- /tiger-site-admin/ --> DjangoAdmin[Django Admin]
+    DjangoAdmin --> ModelEditor[Model Editor]
+    DjangoAdmin -- For --> PlatformSupport[Platform Support]
+
+    Router -- /dashboard/nacora-admin/ --> NacoraAdmin[Nacora Admin Queue]
+    NacoraAdmin --> OperationalWorkflows[Operational Workflows]
+    NacoraAdmin -- Uses --> HTMXUI[HTMX UI]
+
+    DjangoAdmin -- Runs in --> DjangoProcess[Django Process]
+    NacoraAdmin -- Runs in --> DjangoProcess
+
+    DjangoAdmin -- Audits Actions --> AuditTrail[Audit Trail]
+    NacoraAdmin -- Audits Actions --> AuditTrail

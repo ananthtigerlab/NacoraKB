@@ -1,0 +1,14 @@
+flowchart LR
+    Platform["TigerLab InSurance Platform"]
+    NacoraCustom["Nacora Customisation Layer"]
+
+    Platform --> Backend["Django Backend"]
+    Platform --> Frontend["React Frontend"]
+
+    NacoraCustom -- Customises --> Backend
+    NacoraCustom -- Customises --> Frontend
+
+    Backend --> DataStores["Data Stores"]
+    Backend --> Integrations["Third Party Integrations"]
+
+    Frontend -- Uses APIs --> Backend

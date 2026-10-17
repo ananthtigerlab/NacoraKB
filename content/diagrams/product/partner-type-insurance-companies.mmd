@@ -1,0 +1,10 @@
+flowchart LR
+    A["Administrator"] --> IC["Insurance Company"]
+    P["Producer or Broker"] --> Pol["Policy"]
+    Pol -- selects insurers --> IC
+    IC -- owns --> IG["Insurance Group"]
+    IG -- contains --> UW["Underwriter"]
+    Pol -- generates --> Ref["Referral Request"]
+    Ref -- reviewed by --> UW
+    Pol -- generates --> Cert["Certificate"]
+    IC -- appears on --> Cert

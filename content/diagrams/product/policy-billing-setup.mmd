@@ -1,0 +1,11 @@
+flowchart LR
+    A[Policy Billing Setup] --> B[Billing Currency]
+    A --> C[Maximum Insurable Limit]
+    A --> D[Billing Date]
+    A --> E[Shipment Charges]
+
+    B --> F[Rating Engine]
+    B --> G[Quote and Certificate]
+    C --> H[High Value Shipment Alert]
+    E --> G
+    D --> I[Invoice Generation]

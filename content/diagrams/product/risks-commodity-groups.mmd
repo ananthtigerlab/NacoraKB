@@ -1,0 +1,12 @@
+flowchart LR
+    A["Policy Creation"] --> B{"Nature of Business?"}
+
+    B -- "Freight Forwarder" --> C["Freight Forwarder Policy"]
+    C --> D["Auto Populated Groups"]
+    D --> E["Powers AI Suggestion"]
+    E --> F["Used for Rating"]
+
+    B -- "Shipper or Consignee" --> G{"Tab Visible?"}
+    G -- "Yes" --> H["Manually Defined Groups"]
+    H --> I["Participant Selects Group"]
+    I --> F
