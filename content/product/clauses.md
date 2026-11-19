@@ -16,6 +16,12 @@ All three layers share the same authoring experience and the same details view. 
 
 Clauses are not applied to shipments automatically. Adding a clause to a policy only makes the wording *available*. Attaching it to a shipment happens through **Business Rules** — a rule evaluates shipment conditions, and when they match, the rule attaches the specified clauses to the shipment. This design lets a single policy apply different clauses to different shipments based on the actual cargo profile.
 
+**Clause attachment to shipments.** When a business rule fires and attaches clauses to a shipment, each clause is attached in its own database savepoint. If one clause fails to attach (for example, a constraint violation), only that clause is rolled back — the other clauses on the same rule still land on the shipment. The attachment reads the clause twice (once to check whether it has changed, once to write) so that unchanged clauses are not rewritten. This keeps the audit trail clean and avoids locking unchanged rows.
+
+**Always-refer special rates attach clauses too.** When a Special Rate is configured as "always refer", the matching shipment is still referred for manual review — but the policy clauses are now attached to the shipment before the referral is raised. The underwriter sees the full clause picture on the referral activity page, not just the risk details.
+
+**Sanctions-only special rates also attach clauses.** When a Special Rate is set to sanctions-only rule evaluation, the policy clauses are attached to the shipment alongside the sanctions check. Non-compliance rules are skipped, but clause attachment proceeds normally.
+
 ## Who uses it & where
 
 - **Administrators** create, update, version, duplicate, activate, and deactivate global clauses in the Global Clauses Library.
@@ -235,6 +241,20 @@ If more than one rule matches the same shipment, the shipment may receive clause
 **Reviewing applied clauses on a shipment.** Once a shipment is quoted and the relevant business rules have been evaluated, the attached clauses can be reviewed by Back Office users from the Shipment 360 page under the Clauses tab. The **Clauses tab on the Referral Activity page** displays both policy-level clauses (the reusable wording attached to the shipment via Business Rules) and shipment-specific clauses (any wording added directly to this shipment inside the referral) so the underwriter can see the full clause picture at review time (from I2G-29834).
 
 **Selection persistence across pagination.** When importing clauses from a long list, the multi-select state is preserved as the user pages through the results (from I2G-29554). Ticking clauses on page 1, moving to page 2, ticking more, and coming back to page 1 keeps the original selections intact rather than clearing them. This is the expected behaviour on any long selection list, and it was fixed here after the previous behaviour was found to be lossy.
+
+### Clause books for migrated policies
+
+Policies migrated from legacy systems (Turkey, Hong Kong, National waves) carry their own clause books. A clause book is a per-policy lookup that maps policy names to their required clauses, including fixed charges and conditional charges. During migration, the system reads the clause book for each policy and attaches the correct clauses based on the book's entries. Each migration wave can have its own clause book format — the Turkey and Hong Kong wave reads clause books per policy, while the National wave reads a single clause book that names its policies on every row.
+
+### Per-conveyance certificate wording
+
+Sea-related conveyances can carry a certificate display format that controls how the conveyance appears on the printed certificate. Three options are available:
+
+- **Conveyance name** — the default. The certificate prints the conveyance as entered (for example, "Ocean Vessel - Under Deck"). This is the original behaviour.
+- **Vessel name** — the certificate prints the vessel name instead (for example, "VESSEL, TIHAMA"). Used when the insurer wants the certificate to name the actual vessel rather than the conveyance category.
+- **Custom label plus vessel name** — a free-text label followed by the vessel name (for example, "PER VESSEL, TIHAMA"). Used when the insurer wants a specific prefix.
+
+Only the certificate reads this setting. The quotation and rating engine continue to use the original conveyance for pricing. A shipment without a vessel name falls back to the conveyance name. The server refuses a vessel format on a conveyance that is not sea-related, and refuses a custom format without a label.
 
 ### Clause behaviour in documents
 

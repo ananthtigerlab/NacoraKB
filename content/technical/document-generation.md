@@ -64,6 +64,20 @@ Template versioning is important: editing a live template creates a new `Dynamic
 
 **Cancellation and endorsement documents** follow the same pattern — different `doc_type`, different template.
 
+### Conveyance-specific certificate wording (CGDEV-81)
+
+Each conveyance can now choose how it appears on the certificate. The conveyance choice carries two configuration attributes:
+
+- **certificate_display** — one of three modes:
+  - "Conveyance only" — prints the conveyance name as before (the default for backward compatibility).
+  - "Vessel Name only" — prints the vessel name instead of the conveyance. Only valid for sea-related conveyances.
+  - "Custom Display Name + Vessel Name" — prints a custom label followed by the vessel name. Only valid for sea-related conveyances.
+- **certificate_label** — the custom label text, used when the display mode is "label and vessel".
+
+A shipment without a conveyance, or a conveyance with no display configuration, falls back to the original behaviour. Rating and quotation are unaffected — they continue to use the conveyance key. Only the certificate rendering reads the display configuration.
+
+Administrators configure these attributes in the Conveyance choice setup in the back office.
+
 ### Multi-language handling
 
 - Every `DynamicTemplateVersion` carries a `language` tag (ISO 639-1: `en`, `de`, `fr`).

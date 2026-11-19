@@ -53,6 +53,20 @@ For some Shipper or Consignee policyholders the commodity scope is captured per 
 
 If the broker changes the policyholder's Nature of Business on General Details after the Commodity Group tab has been configured, a prompt appears to clear the commodity groups. This is required because the manually built list is not compatible with the Freight Forwarder auto-population model, and vice versa.
 
+### Per-policy commodity lists
+
+Some policies define their own commodity list rather than relying on the default commodity groups from the Choices module. When a policy has its own list, shipments are priced against the commodities on that list. The rating engine reads the policy's commodity table first and resolves the shipment's commodity against the policy's own entries.
+
+Third-party policies always allow commodity entry regardless of the policyholder's Nature of Business.
+
+### Rate category linking
+
+Each commodity group can be linked to a rate category. The rate category tells the rating engine which column of the rate table to price against for that commodity. A commodity group cannot be activated on a policy without a rate category linked to it — the platform blocks the activation and displays the reason.
+
+If a commodity group is activated and later its rate category link is removed, shipments in that commodity are referred with a clear reason rather than priced at zero. The back-office policy page lists any unlinked groups and any shipments that were booked at zero premium before this safeguard was introduced.
+
+When a rate category is linked to a commodity group for the first time (or restored after being unlinked), any open quotes affected by that group are automatically re-rated so they receive a price.
+
 ### Interplay with rating
 
 Every commodity group (or every Commodity Groups Lookup Table category) is a rating dimension. When the broker later configures the Base Rater, Commodity Groups can be added as a rating factor either from the Risks list directly (using each individual group) or through a Lookup Table that groups commodities into a single named category to reduce permutations.
@@ -71,6 +85,10 @@ The AI-assisted commodity suggestion on the shipment form is a separate feature 
   - Shipper or Consignee (shipment-level) — tab hidden entirely.
 - **The AI-assisted commodity suggestion is only used for Freight Forwarder policies.** It is not used for policies where commodity groups are defined manually.
 - **Every configured commodity group must be covered by the rate matrix**, either individually or via a Commodity Groups Lookup Table. Missing rates cause referrals.
+- **A commodity group cannot be switched on without a rate category.** If the group has no rate category linked, the platform blocks activation and explains why.
+- **A no-rate referral cannot be approved without a rate or cargo premium.** The Approve button is disabled with the reason, and the API enforces the same constraint.
+- **Per-policy commodity lists override defaults.** When a policy defines its own commodity list, the rating engine resolves against the policy's entries, not the deployment-wide defaults.
+- **Third-party policies always allow commodity entry** regardless of the policyholder's Nature of Business.
 - **Changing the Nature of Business after configuring commodity groups prompts to clear the tab.** The two models are not compatible.
 - **The manual list becomes the exhaustive list of options participants can pick.** Any commodity outside the list cannot be shipped under the policy.
 - **Rating can use grouped or individual entries.** The Commodity Groups Lookup Table lets the broker treat multiple related commodities as a single rating category to reduce permutations.
@@ -81,4 +99,5 @@ The AI-assisted commodity suggestion on the shipment form is a separate feature 
 - Commodity Group Suggestion
 - Rating
 - Choices
+- Special Rate
 - Policy Creation (New Business)

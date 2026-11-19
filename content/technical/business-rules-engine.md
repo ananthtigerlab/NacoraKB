@@ -86,6 +86,14 @@ Two setting-level toggles gate the engine in production:
 
 `EVALUATE_ONLY` is used during rule authoring in staging: authors can watch the audit trail fill up without any operational side-effect.
 
+### Vessel referral — IMO-gated non-IACS check (SNAC-66)
+
+The `VESSEL_REFERRAL` category includes a non-IACS classification society check. Previously, any sea shipment without a vessel from an IACS society was referred immediately — including quotes saved before the vessel was known.
+
+The updated logic only triggers the non-IACS referral once the shipment names a vessel by IMO number. If the IMO number is blank or absent (a common state for early quotes), the non-IACS condition evaluates to false and the shipment is not prematurely referred. Once the vessel is added with an IMO number and the shipment is re-saved, the non-IACS check runs normally.
+
+This prevents false referrals on quotes in progress where the vessel has not yet been nominated.
+
 ### Where evaluations are triggered
 
 - Shipment save → `RulesEvaluationService.evaluate(shipment)` runs after the rating engine and before the response is returned.
@@ -108,6 +116,7 @@ Beat schedule note: no scheduled sweep. The engine is invoked on save and on exp
 ## Constraints, guarantees, and gotchas
 
 - **Platform categories always win.** REFERRAL / SANCTIONS / VESSEL_REFERRAL / NO_APPLICABLE_RATES fire first; a policy-custom rule cannot pre-empt them by having a lower `priority` number.
+- **Non-IACS referral requires an IMO number.** Sea shipments are only referred as non-IACS once the vessel is named by IMO. A quote saved before the vessel is known is not referred — this prevents false referrals on work-in-progress quotes.
 - **DECLINE halts.** No further actions run once a `DECLINE` action fires. Ordering matters: a low-priority `DECLINE` will still stop everything after it in its pass.
 - **Audit is match-only.** Absence of a `RuleEvaluation` row does not mean the rule wasn't evaluated — it means the rule didn't match. Use the Rules Debugger to see the "why not".
 - **CEL is sandboxed and time-bounded.** A runaway expression will fail rather than hang the request.

@@ -39,7 +39,8 @@ Two closely related batch pipelines: **bulk upload** ingests many shipments at o
 7. **Optional pricing override:** if the row provides `cargo_premium`, `charges_level_1..12`, `total_cost` columns, those override the rated values — useful when the broker is backfilling historical shipments with negotiated rates.
 8. **Status:** shipments are created with `status = BOOKED_BULK_UPLOADED_STATUS = 150` (Nacora-specific status distinguishing bulk-uploaded from Quote-then-Book flow).
 9. Every row's outcome is logged to a `Report` and an `Activity` for status tracking. Errors get row-level messages ("Policy not found", "Invalid commodity", "Missing vessel IMO for Sea conveyance", etc.).
-10. **Business rules do NOT run today on bulk rows.** This is a live post-MVP client ask — the current MVP behaviour is that bulk-uploaded shipments bypass the rules engine to avoid mass-referring historical data.
+10. **Inline rating and referral (CGDEV-80).** Each bulk-uploaded row is now rated inline during processing. When the rating engine cannot find an applicable rate for a row, the shipment is automatically referred instead of failing. This means bulk uploads produce a mix of booked shipments (where a rate was found) and referred shipments (where no rate matched), allowing underwriters to handle exceptions through the normal referral queue rather than rejecting the entire upload.
+11. **Business rules.** Previously bulk-uploaded shipments bypassed the rules engine entirely to avoid mass-referring historical data. With inline rating and referral now in place, the rules engine integrates with the bulk flow for rate-driven referrals. Full business-rule evaluation on bulk rows remains a live post-MVP ask.
 
 ### Column configuration pattern
 

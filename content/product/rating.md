@@ -6,6 +6,8 @@ Rating is how the platform decides the premium for a shipment. Every policy in N
 
 The Base Rater is the workhorse of pricing. On top of it, the platform layers a **Special Rater** for negotiated one-off rates, a set of **Business Rule** minimums and adjustments, and daily FX conversion so that everything ultimately produces one clean quote in the policy's billing currency.
 
+Pricing is also shaped by **Commodity Group Rate Categories**. Each commodity group can be linked to its own rate category on the policy. The rating engine reads the commodity group, looks up the rate category the policy assigns to it, and prices accordingly. If a commodity group is not linked to a rate category, the shipment is referred with a clear reason rather than priced at zero.
+
 The Base Rater step must be completed and marked as ready before a policy can be activated. A policy that goes live with an incomplete rate table will either quote shipments incorrectly or fail to quote them at all — and the platform is deliberate about that: any unmatched combination triggers the "No Applicable Rates Available" system rule and refers the shipment to an underwriter rather than guessing.
 
 ## Who uses it & where
@@ -142,7 +144,7 @@ To assign rates:
 - Use the filters above the table to narrow to specific permutations by Conveyance, Coverage, Packing, Routes, or Commodity Groups. Filtering is essential when the table is large — it lets you bulk-update rates across similar combinations rather than editing each row on its own.
 - Select one or multiple rows.
 - Enter the required rating values:
-  - **Rate** — the pricing percentage applied to the insured value for this risk combination.
+  - **Rate** — the pricing percentage applied to the insured value for this risk combination. Rates accept up to three decimal places only.
   - **Minimum Premium** — the floor premium for this combination. Leave blank if not applicable.
 - Save.
 - Repeat until every required permutation is rated.
@@ -179,6 +181,24 @@ When a shipment is submitted, the platform runs the following in order to produc
   - **Missing rate.** If the permutation is unrated (no cell in the Base Rater), the shipment is referred via the No Applicable Rates Available rule.
 - Build the full premium breakdown: base rate, cargo premium, up to eleven configurable charge levels, total payable, FX rate used, and the base-currency (EUR) equivalent for analytics. All of this is stored on the shipment record.
 
+### Conveyance as a rating dimension
+
+Some policies price different conveyances at different rates — for example, a merged tariff where Air and Sea have one rate column, and Road and Rail have another. When a base-rate import sheet is priced by conveyance, the platform adds the conveyance dimension to the rating factors automatically. This expands the permutation table (for example, 242 route-commodity rows become 968 when four conveyances are added) but ensures the correct rate is applied to each mode of transport.
+
+If the import fails after the dimension is added, the platform removes it and restores the previous rates.
+
+### Re-rating booked shipments
+
+Booked shipments can be re-rated after the fact — for example, when a commodity group was not priced at booking time and a rate category has since been linked. Re-rating works as follows:
+
+- Quoted shipments are re-priced in place. The old breakdown is kept in the re-rate history.
+- Booked and Endorsed shipments can be endorsed into a new version at the corrected premium.
+- A shipment that billing has already invoiced is never re-priced in place. The invoiced record is left unchanged with the reason. An endorsement bills the difference.
+- A shipment that re-rates to zero premium is rejected and reported as failed with the reason. Zero-premium bookings are never persisted.
+- Re-rating can optionally regenerate the certificate documents and send a notification email.
+
+The Bulk Re-rate screen endorses by default with documents and email. Individual shipments can also be re-rated from the command line.
+
 ### Rate versioning
 
 Each policy has one active rating version at a time. A broker can create a new version by duplicating the current one and setting a future effective date. New quotes on or after that date use the new version; quotes already issued stay on the version they were quoted against. Historical PDFs are not regenerated.
@@ -206,6 +226,11 @@ Other rules and behaviours:
 - **A country belongs to exactly one route group.** Overlapping route definitions are blocked; they would cause ambiguous route matching at rating time.
 - **Route matching is bidirectional.** A group defined as "Asia → Europe" also matches shipments going Europe → Asia. Do not create both directions as separate groups.
 - **Unrated permutations refer, they do not silently rate at zero.** The No Applicable Rates Available system rule is a safety net against under-configuration.
+- **Zero-premium bookings are rejected.** If the rating engine returns a zero total after all overrides, the booking is refused. This applies to both SOAP and REST callers.
+- **Commodity groups must be linked to a rate category.** A commodity group cannot be switched on for a policy unless it is linked to a rate category. If a group is unlinked, shipments in that commodity are referred with a reason explaining which group could not be resolved.
+- **Per-policy commodity lists.** Some policies define their own commodity list. When a policy has its own list, shipments are priced against the commodities on that list rather than the default commodity groups.
+- **Rates accept up to three decimal places.** The Base Rater enforces a maximum of three decimal places on rate values. Values with more precision are rejected at import time.
+- **Re-rating never produces a zero-premium booking.** If a re-rate finds no applicable rate, the shipment is left unchanged and reported as failed with the reason.
 - **No external rater validation.** Rates are not cross-checked against an outside pricing system. The only in-product place to verify the resulting premium is the Total Cost Calculator on the shipment detail page, which shows the currency conversion and the applied rate side by side.
 - **Test after activation.** Push a representative shipment through each rate group after go-live. It takes minutes and catches configuration mistakes that would otherwise fire in front of a live participant.
 

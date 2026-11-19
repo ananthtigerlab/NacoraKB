@@ -88,6 +88,8 @@ The underwriter cannot Confirm Rates while any combination is still Draft or Dec
 
 The selection sits on the Special Rate itself and is visible in reporting, so the choice is auditable after the fact.
 
+**Clause attachment under sanctions-only and always-refer.** Regardless of which bypass option is chosen, policy clauses are now attached to matching shipments. Under sanctions-only, the clause attachment runs alongside the sanctions check — non-compliance rules are skipped, but clauses still land on the shipment. Under always-refer, the clauses are attached before the referral is raised, so the underwriter sees the full clause picture on the referral activity page.
+
 **Applicable-clauses preview.** The SRR form shows, per combination, which clauses will attach to a shipment matching that permutation based on the active Business Rules on the policy (from I2G-29727). This gives approvers the full clause scope before pressing Confirm Rates — no more surprises about which clauses end up on the certificate of a Special-Rate-priced shipment.
 
 ### Bulk vs individual approval
@@ -179,6 +181,20 @@ For volume changes across many shipments — a book-wide rate refresh, a mid-yea
 - **Bulk rerate** takes a set of already-booked or already-quoted shipments and re-runs the rating engine against a new Base Rater or Special Rate version. This is the mechanism for propagating a corrective repricing back through existing shipments rather than only forward. Every rerated shipment carries a marker on the audit trail identifying which bulk operation touched it.
 
 Both actions are gated behind confirmation dialogs because the impact is broad; the confirmation summarises how many shipments are in scope and what the aggregate premium delta will be before the underwriter presses Confirm.
+
+## Imported special rates from legacy systems
+
+Special rates for migrated policies are loaded in bulk from workbooks provided by the legacy systems. The following country groups have been imported:
+
+- **Belgium, Germany, Italy, Portugal, and Spain** — loaded from a consolidated workbook with shipping routes, client-code-keyed assureds, and row corrections for data quality issues.
+- **Austria (Road and Rail)** — the first migration wave.
+- **Austria (Air and Sea)** — a second wave covering the same ten Austrian policies plus KN Poland, priced across detailed shipping routes.
+
+Each import run reads its configuration (routes, participant mappings, dimension aliases, and duplicate-row handling) from a named config file. Runs are scoped to named policies so that each policy can be imported independently as its conveyance setup is completed. The system caches participant lists and clause lookups for performance during large imports.
+
+Where a workbook names shipping routes that the Routes tab does not define, the system resolves them through route families — groups of routes sharing a geographic region. A family's country lists are derived once from the Routes tab and applied to every route in the family, so a re-issued workbook that adds a route widens its family automatically.
+
+An assured priced in multiple workbooks keeps a single request holding both sets of rates. The import uses update mode so that existing rates are refreshed rather than duplicated, and stale rates from other workbooks are not deactivated.
 
 ## Certificate numbering on SRR flows
 

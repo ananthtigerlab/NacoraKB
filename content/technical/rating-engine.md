@@ -27,11 +27,13 @@ An incoming rate request follows these stages (called from `PolicyVersionItemVie
    - `departure_country`, `destination_country` (ISO-3166)
    - `sum_insured`, `sum_insured_currency`
    - `voyage_dates`, `named_assured`, `participant_company_id`
-2. **Base-rater lookup.** The engine calls the policy's Base Rater catalogue (external service, product-scoped) with the six-tuple key and receives:
+2. **Commodity-group rate-category resolution.** Before the base-rater lookup, the engine reads the policy's commodity table. If the policy defines its own commodity list, the shipment's commodity is resolved against the policy's entries. The engine then looks up the rate category the policy assigns to that commodity group. If a commodity group has no rate category linked, the shipment is referred with a reason naming the unlinked group — it is never priced at zero.
+3. **Base-rater lookup.** The engine calls the policy's Base Rater catalogue (external service, product-scoped) with the six-tuple key and receives:
    - `base_rate` (percentage or fixed)
    - `min_premium` (currency-scoped floor)
    - `return_type` (`PERCENTAGE` / `FIXED` / `RATE`)
    - Any base clauses that must attach.
+   Rates accept up to three decimal places only. The conveyance dimension is added to the lookup key when the policy prices by conveyance (for example, merged tariffs where Air/Sea and Road/Rail have separate rate columns).
 3. **SRR override.** The engine queries `RiskFactorCombinations` where `special_rate_request__policy = shipment.policy`, `status = 'ACTIVE'`, `is_active = True`, and `key_signature = <hash of key_values>`. If a row matches:
    - `special_rate` replaces `base_rate` (subject to `return_type`).
    - `min_premium` replaces the base floor if higher.
@@ -97,7 +99,10 @@ The engine is unit-tested end-to-end against fixture policies. The two most impo
 Operational commands:
 
 - `python src/manage.py update_usd_exchange_rates` — force-refresh FX rates (daily cron via Celery Beat is the normal source).
-- `nacora.tasks.bulk_rerate_shipments` — batch re-rate a set of shipments against a specific rating version.
+- `nacora.tasks.bulk_rerate_shipments` — batch re-rate a set of shipments against a specific rating version. The Bulk Re-rate screen endorses by default with documents and email.
+- `python src/manage.py rerate_nacora_shipments` — re-rate named shipments from the command line. Accepts one or comma-separated shipment numbers. Quoted shipments are re-priced in place; Booked and Endorsed shipments are endorsed into a new version. Flags: `--commit` to execute (dry run by default), `--documents` to regenerate certificates, `--notify` to email the updated certificate, `--endorse` to endorse a booked shipment into a new version. A shipment that billing has already invoiced is never re-priced in place — an endorsement bills the difference instead.
+- `python src/manage.py audit_nacora_commodity_groups` — reports which commodity groups are linked/unlinked across policies and lists shipments that found no rate.
+- `python src/manage.py link_nacora_commodity_groups` — links commodity groups to rate categories. `--seed-rate-categories` stores the defaults; `--activate` switches a group back on once it is linked on every policy. Dry run unless told otherwise.
 
 ## Constraints, guarantees, and gotchas
 
@@ -105,7 +110,10 @@ Operational commands:
 - **Latest-active SRR wins.** If two `RiskFactorCombinations` rows share the same `key_signature` under the same SRR, only the row with `is_active=True` is considered; deactivate before creating a replacement.
 - **Business-rule floors override SRR floors.** A `SET_MIN_PREMIUM` action set by a policy custom rule stacks on top of the SRR min-premium — the engine takes the higher of the two.
 - **FX pivot via USD is mandatory.** Direct-pair rates are never trusted for base-currency reporting; USD is the single pivot so all analytics tie. If yesterday's USD rate is missing for either hop, the base-currency figures are `null` rather than silently 1:1.
-- **Zero-premium bookings are rejected at the SOAP layer.** If the engine returns a $0 total after all overrides, the SOAP handler raises a fault — silent zero-premium bookings never persist. REST callers still see the `pricing_breakdown`, but the front-end blocks confirmation.
+- **Zero-premium bookings are rejected at the SOAP layer.** If the engine returns a $0 total after all overrides, the SOAP handler raises a fault — silent zero-premium bookings never persist. REST callers still see the `pricing_breakdown`, but the front-end blocks confirmation. The Bulk Re-rate also rejects zero-premium outcomes rather than endorsing at zero.
+- **Commodity group rate-category enforcement.** A commodity group cannot be activated on a policy without a rate category linked. The rating engine reads the policy's commodity table, then the group's rate category. If the group has no category, the shipment is referred with the reason, not priced at zero. A no-rate referral cannot be approved without a rate or cargo premium — both the UI and the API enforce this.
+- **Per-policy commodity lists.** Policies can define their own commodity list (distinct from the deployment-wide Choices). When present, the engine resolves the shipment's commodity against the policy's own entries. Migrated policies (LATAM, Turkey, Hong Kong, National) commonly use this.
+- **Re-rate of invoiced shipments.** A shipment that billing has already invoiced is never re-priced in place. The old breakdown is kept in `rerate_history` and an endorsement bills the difference. This prevents billing from billing a record twice.
 - **The base-rater catalogue is external.** A base-rater outage returns an error to the caller — there is no in-DB fallback catalogue. Nacora's SRE runbook covers restarting the base-rater client and, if needed, disabling `NACORA_SPECIAL_RATE_ENABLED` to force base-only pricing while the rater recovers.
 - **`ATOMIC_REQUESTS = True` applies.** A partial pricing write is impossible; either the whole breakdown persists or none of it does.
 - **Numbering is engine-adjacent, not engine-owned.** Shipment numbers come from `ShipmentNumberingService`, not from the rating engine. See Numbering.

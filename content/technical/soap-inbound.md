@@ -68,6 +68,20 @@ Every write envelope carries `<MessageControl><MessageID>`. The handler:
 
 **Table schema:** `message_id` (partition key), `request_hash`, `response`, `status` (`PROCESSING` / `SUCCESS` / `FAULTED`), `expires_at` (TTL). The 90-day window matches the K+N replay policy.
 
+### Repeat booking detection (SNAC-105)
+
+The DynamoDB idempotency above keys on MessageID, but the KN ESB retries a failed booking with a new RequestID. Without a second check, each retry booked another shipment.
+
+A booking is now treated as a repeat when the same policy already has a shipment, created within a configurable window (default 168 hours), that carries the same ShipmentReferenceNo and, when the request names one, the same NacoraShipmentID. The rest of the request body is not compared — Salog changes a booked shipment with ChangeShipment, not by rebooking.
+
+When a repeat is detected the handler returns the existing shipment's current state as a normal success response and books nothing new. The check never fails a booking: any error during detection is logged and the booking proceeds as before.
+
+### REST endpoint (CGDEV-110)
+
+A parallel REST interface is served at `/api/v1/integrations` for the same shipment operations (book, change, cancel, query). It accepts JSON instead of SOAP XML and uses standard bearer-token authentication rather than WS-Security. The REST endpoint was introduced for portal quote booking by NacoraShipmentID and accepts either the full certificate number or the short shipment number.
+
+The REST endpoint was reverted from pre-release and then restored for hotfix only. Production stays on the nacora-release branch with the SOAP surface as the primary path.
+
 ### Code translation
 
 Salog uses short codes (`FS`, `FA`, `A`, `B`); the platform uses Nacora `Choices.key` (`sea`, `air`, `icc_a`). Translation happens via **`BiDirectionalLookupService`** and the `SOAP_SALOG_CODE_MAP` fallback (see Choices, Lookups & Code Maps).
@@ -193,6 +207,7 @@ Operational commands / URLs:
 ## Constraints, guarantees, and gotchas
 
 - **Idempotency is by MessageID, not by request content.** Two envelopes with different MessageIDs but identical bodies produce two shipments. Salog's own client is expected to reuse the MessageID on retries.
+- **Repeat detection catches what idempotency misses.** When the KN ESB retries with a new RequestID, the repeat booking check matches by policy, ShipmentReferenceNo, and NacoraShipmentID. This second layer prevents duplicate shipments from ESB retries.
 - **The dedup window is 90 days.** A replay 91 days later behaves like a fresh request. This matches Salog's replay policy.
 - **Unknown codes fail loud.** No "unknown → default" mapping is ever inserted. This catches upstream misconfiguration at the earliest possible point.
 - **Zero-premium is rejected, not persisted.** A silent free policy would be a serious billing bug; the handler rejects.

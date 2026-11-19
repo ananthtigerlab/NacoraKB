@@ -22,6 +22,8 @@ A referral is created automatically whenever a shipment triggers a matching busi
 
 At the moment of creation, the shipment moves to Referred status. Both the participant and the broker receive an email notification immediately. The shipment is now on hold — it cannot be booked and it cannot be edited from the Shipment Portal until every referral on it is closed.
 
+**Non-IACS vessel referral timing.** Sea shipments are referred for a non-IACS classification society only once the shipment names a vessel by IMO number. A quote saved before the vessel is known is not referred for non-IACS — the check runs only when the vessel carries an IMO. A vessel with an IMO and no classification society, or one whose society is outside the IACS list, is still referred. The separate "Cannot Locate Vessel" rule is controlled per policy in Business Rules, not in code.
+
 ### The Referrals Dashboard
 
 Both interfaces have a Referrals dashboard, but they surface different views of the same underlying record.
@@ -45,7 +47,7 @@ Clicking any referral row opens the full referral record. The header carries the
 
 From the Referral Activity Page in the Back Office, the underwriter has a set of actions that shape how the referral progresses.
 
-**Assign to an underwriter.** If the referral needs a specialist or someone with higher authority, the assignee is changed. The Back Office user presses **Assign to Underwriter**, picks the target from the panel of available underwriters, optionally adds a comment, and confirms. The newly-assigned underwriter receives an email with a direct link to the referral. Reassigning is unlimited; every assignment change is captured in the activity log.
+**Assign to an underwriter.** If the referral needs a specialist or someone with higher authority, the assignee is changed. The Back Office user presses **Assign to Underwriter**, picks the target from the panel of available underwriters, optionally adds a comment, and confirms. The newly-assigned underwriter receives an email with a direct link to the referral. When the assignee has no email address (for example, an underwriting group mailbox that was never configured), the system sends the notification to the referral's responsible office instead, so the referral is never silently lost. Reassigning an open referral (in Awaiting Review status) now emails the new assignee; a business rule that creates and immediately reassigns a referral still sends a single email rather than two. Reassigning is unlimited; every assignment change is captured in the activity log.
 
 Referrals can also be assigned to a **user group** in addition to a named underwriter (from I2G-29988). Group assignment is the pattern used when a specialist team, rather than one individual, owns a category of referrals — the referral appears in the shared queue for every member of the group and any of them can pick it up. On the KN Poland and Eastern Europe books, referrals route by country and region rather than to a shared mailbox: for example, referrals from certain countries go directly to Marcel Behnke (from I2G-30081). This is configured on the underlying business rule and can be overridden manually on any specific referral.
 
@@ -103,6 +105,7 @@ A shipment can have more than one referral raised against it. Common examples ar
 - **Q&A answers are permanent.** Every question and every answer is timestamped and captured in the activity log. Answers cannot be silently rewritten. This is the audit backbone of the workflow.
 - **Internal comments stay internal forever.** Participants never see them, before or after the referral closes.
 - **Adjustments inside a referral do not touch the shipment.** Risk edits, premium overrides, and clause changes made inside the referral only apply to the shipment on approval. They do not leak into the live shipment while the review is under way.
+- **Approved referrals survive non-material edits.** When a shipment with an approved referral is amended (for example, correcting a typo in the description or updating a non-risk field), the existing approval and its attached clauses are carried forward. The shipment is not re-referred for the same reason. Only a material change to the risk (changing commodity, route, insured value, or other rule-triggering fields) can raise a fresh referral.
 - **Special Conditions surface separately.** Any clause added inside a referral can be marked as a Special Condition; it then appears in a distinct section on the certificate below the standard Insuring Conditions.
 - **Approve triggers a re-rate.** On approval the system re-rates the shipment using the updated risk details, premium overrides, and clauses from the referral.
 - **Decline is not the end of the movement.** A declined referral means the shipment cannot proceed under those exact terms. The participant can edit the shipment (change value, route, conveyance) and re-submit — the rating engine may produce a quote that does not trigger a referral this time. If the issue is purely pricing, a Special Rate Request may be the right path.

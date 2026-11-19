@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import Link from 'next/link';
-import { Loader2, Sparkles, ExternalLink } from 'lucide-react';
+import { Loader2, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 type PageHit = {
@@ -16,23 +16,15 @@ type PageHit = {
 type SourceHit = { kind: 'source'; id: string; label: string; type: string; snippet: string };
 type Hit = PageHit | SourceHit;
 
-type Citation = { id: string; title: string; spaceSlug: string; spaceName: string; slug: string; href: string };
-
-type AiAnswer = { answer: string; citations: Citation[] };
-
 type Props = { initialQuery: string; initialTags: string[] };
 
 export function SearchResults({ initialQuery, initialTags }: Props) {
   const [hits, setHits] = React.useState<Hit[]>([]);
   const [loading, setLoading] = React.useState(false);
-  const [aiLoading, setAiLoading] = React.useState(false);
-  const [ai, setAi] = React.useState<AiAnswer | null>(null);
-  const [aiError, setAiError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     if (!initialQuery && initialTags.length === 0) {
       setHits([]);
-      setAi(null);
       return;
     }
     const ctrl = new AbortController();
@@ -55,29 +47,6 @@ export function SearchResults({ initialQuery, initialTags }: Props) {
       }
     })();
 
-    if (initialQuery) {
-      (async () => {
-        setAiLoading(true);
-        setAiError(null);
-        try {
-          const res = await fetch('/api/ai-answer', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ q: initialQuery }),
-            signal: ctrl.signal,
-          });
-          if (!res.ok) throw new Error(await res.text());
-          setAi(await res.json());
-        } catch (e) {
-          if (!isAbort(e)) setAiError(e instanceof Error ? e.message : String(e));
-        } finally {
-          if (!ctrl.signal.aborted) setAiLoading(false);
-        }
-      })();
-    } else {
-      setAi(null);
-    }
-
     return () => ctrl.abort();
   }, [initialQuery, initialTags.join('|')]);
 
@@ -99,52 +68,12 @@ export function SearchResults({ initialQuery, initialTags }: Props) {
             ))}
           </div>
         )}
-        {!loading && !aiLoading && initialQuery && (
+        {!loading && initialQuery && (
           <p className="mt-2 text-sm text-text-muted">
             Search finished — {pageHits.length} page{pageHits.length === 1 ? '' : 's'} and {sourceHits.length} source{sourceHits.length === 1 ? '' : 's'} matched.
           </p>
         )}
       </div>
-
-      {/* AI answer */}
-      {initialQuery && (
-        <section className="mb-10 rounded-lg border border-border-muted bg-surface-muted/40 p-5">
-          <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
-            <Sparkles className="h-3.5 w-3.5" />
-            AI answer
-            {aiLoading && <Loader2 className="ml-1 h-3.5 w-3.5 animate-spin text-text-muted" />}
-          </div>
-          {aiLoading && !ai && (
-            <p className="text-sm text-text-muted">Reading the KB and drafting an answer…</p>
-          )}
-          {aiError && (
-            <p className="text-sm text-danger">Couldn't generate answer: {aiError}</p>
-          )}
-          {ai?.answer && (
-            <div className="nacora-reading" style={{ maxWidth: '100%' }}>
-              <AiMarkdown text={ai.answer} />
-            </div>
-          )}
-          {ai?.citations && ai.citations.length > 0 && (
-            <div className="mt-4 border-t border-border-muted pt-3">
-              <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">Cited pages</div>
-              <ul className="flex flex-wrap gap-2 text-xs">
-                {ai.citations.map((c) => (
-                  <li key={c.id}>
-                    <Link
-                      href={c.href}
-                      className="inline-flex items-center gap-1 rounded-md border border-border bg-surface px-2 py-1 hover:border-primary hover:text-primary"
-                    >
-                      {c.title}
-                      <span className="text-text-subtle">· {c.spaceName}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </section>
-      )}
 
       {/* Page results */}
       {loading && pageHits.length === 0 && (
@@ -190,13 +119,13 @@ export function SearchResults({ initialQuery, initialTags }: Props) {
           <ul className="divide-y divide-border-muted">
             {sourceHits.map((h) => (
               <li key={h.id} className="py-3">
-                <Link href={`/sources#${h.id}`} className="group block">
+                <div className="group block">
                   <div className="flex items-baseline gap-2">
-                    <span className="font-medium group-hover:text-primary group-hover:underline">{h.label}</span>
+                    <span className="font-medium">{h.label}</span>
                     <Badge variant="secondary" className="text-[10px]">{h.type}</Badge>
                   </div>
                   {h.snippet && <p className="mt-1 text-sm text-text-muted">{h.snippet}</p>}
-                </Link>
+                </div>
               </li>
             ))}
           </ul>

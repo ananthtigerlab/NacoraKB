@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { FileText, History as HistoryIcon, Inbox, Upload, MessageSquareWarning, GitBranch } from 'lucide-react';
+import { FileText, History as HistoryIcon } from 'lucide-react';
 
 // PRD §10.1 — Cmd/Ctrl-K jumps to any page, runs a search, or starts an upload from anywhere.
 
@@ -63,11 +63,6 @@ export function CommandPaletteProvider({
 
               <Command.Group heading="Navigate" className="text-[11px] uppercase tracking-wider text-text-muted [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:pt-2">
                 <PaletteItem icon={<HistoryIcon className="h-3.5 w-3.5" />} label="History" onSelect={() => { router.push('/history'); setOpen(false); }} />
-                <PaletteItem icon={<FileText className="h-3.5 w-3.5" />} label="Source Library" onSelect={() => { router.push('/sources'); setOpen(false); }} />
-                <PaletteItem icon={<Inbox className="h-3.5 w-3.5" />} label="Proposals" onSelect={() => { router.push('/proposals'); setOpen(false); }} />
-                <PaletteItem icon={<MessageSquareWarning className="h-3.5 w-3.5" />} label="Conflicts" onSelect={() => { router.push('/conflicts'); setOpen(false); }} />
-                <PaletteItem icon={<GitBranch className="h-3.5 w-3.5" />} label="Code Sync" onSelect={() => { router.push('/sync'); setOpen(false); }} />
-                <PaletteItem icon={<Upload className="h-3.5 w-3.5" />} label="Upload artifact" onSelect={() => { setOpen(false); document.dispatchEvent(new CustomEvent('nacora:open-upload')); }} />
               </Command.Group>
 
               {spaces.map((s) => (

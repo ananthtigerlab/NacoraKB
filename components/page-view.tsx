@@ -173,16 +173,6 @@ export function PageView({ page, space, tags, allTags, versions, sources, pendin
             {page.groundingMode === 'code_first' ? 'code-first' : 'human-source'}
           </Badge>
           <span className="text-text-subtle">updated <RelativeTime iso={page.updatedAt} /></span>
-          {pendingProposalCount > 0 && (
-            <Link href="/proposals" className="ml-2 flex items-center gap-1 text-accent hover:underline">
-              <Inbox className="h-3 w-3" /> {pendingProposalCount} pending proposal{pendingProposalCount === 1 ? '' : 's'}
-            </Link>
-          )}
-          {openConflictCount > 0 && (
-            <Link href="/conflicts" className="flex items-center gap-1 [color:hsl(var(--color-warning))] hover:underline">
-              <AlertTriangle className="h-3 w-3" /> {openConflictCount} conflict{openConflictCount === 1 ? '' : 's'}
-            </Link>
-          )}
           <div className="ml-auto flex items-center gap-2">
             <Button
               variant="ghost"

@@ -137,9 +137,7 @@ export function SearchBar() {
                     )}
                   </Link>
                 ) : (
-                  <Link
-                    href={`/sources#${h.id}`}
-                    onClick={() => setOpen(false)}
+                  <div
                     className="block rounded-md p-2 hover:bg-surface-muted"
                   >
                     <div className="flex items-center justify-between gap-2">
@@ -149,7 +147,7 @@ export function SearchBar() {
                       </Badge>
                     </div>
                     {h.snippet && <div className="text-xs text-text-muted">{truncate(h.snippet, 140)}</div>}
-                  </Link>
+                  </div>
                 )}
               </li>
             ))}

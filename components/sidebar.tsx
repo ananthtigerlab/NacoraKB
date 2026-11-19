@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronRight, ChevronsLeft, ChevronsRight, FileText, History as HistoryIcon, FolderTree, MessageSquareWarning, Inbox, GitBranch, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { ChevronRight, ChevronsLeft, ChevronsRight, FileText, History as HistoryIcon, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 
@@ -69,10 +69,7 @@ export function Sidebar({ data }: { data: SpaceWithPages[] }) {
           <div className="mt-4 border-t border-border pt-3">
             <div className="mb-1 px-1 text-[11px] font-semibold uppercase tracking-wider text-text-muted">System</div>
             <SystemLink href="/history" label="History" icon={<HistoryIcon className="h-3.5 w-3.5" />} pathname={pathname} />
-            <SystemLink href="/sources" label="Source Library" icon={<FolderTree className="h-3.5 w-3.5" />} pathname={pathname} />
-            <SystemLink href="/proposals" label="Proposals" icon={<Inbox className="h-3.5 w-3.5" />} pathname={pathname} />
-            <SystemLink href="/conflicts" label="Conflicts" icon={<MessageSquareWarning className="h-3.5 w-3.5" />} pathname={pathname} />
-            <SystemLink href="/sync" label="Code Sync" icon={<GitBranch className="h-3.5 w-3.5" />} pathname={pathname} />
+            <SystemLink href="/history" label="History" icon={<HistoryIcon className="h-3.5 w-3.5" />} pathname={pathname} />
           </div>
         </div>
       </ScrollArea>

@@ -1,10 +1,9 @@
 'use client';
 import Link from 'next/link';
-import { Anchor, Command, Upload } from 'lucide-react';
+import { Anchor, Command } from 'lucide-react';
 import { SearchBar } from '@/components/search-bar';
 import { Button } from '@/components/ui/button';
 import { useCommandPalette } from '@/components/command-palette';
-import { UploadDialog } from '@/components/upload-dialog';
 import { FontSizeControl } from '@/components/font-size-control';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -16,7 +15,6 @@ export function TopBar() {
         <Anchor className="h-5 w-5 text-primary" />
         <span className="font-semibold tracking-tight">Nacora KB</span>
       </Link>
-      {/* PRD §5.8: fixed global search bar pinned to the top of every page. */}
       <div className="flex-1 max-w-2xl">
         <SearchBar />
       </div>
@@ -30,12 +28,6 @@ export function TopBar() {
           <TooltipContent>Command palette (⌘K)</TooltipContent>
         </Tooltip>
         <FontSizeControl />
-        <UploadDialog>
-          <Button size="sm" variant="accent">
-            <Upload className="h-4 w-4" />
-            Upload
-          </Button>
-        </UploadDialog>
       </div>
     </header>
   );

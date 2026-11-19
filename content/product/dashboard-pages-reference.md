@@ -30,11 +30,31 @@ Cross-links between pages are live throughout. Clicking a policyholder on a poli
 
 Visibility is enforced server-side. Participants see only their own records; Back Office users see the full pipeline subject to their role permissions.
 
+### Nacora Home (Work Queue)
+
+**Where it lives.** The Back Office landing page for all logged-in back-office users. Replaces the previous widget-based Home.
+
+**Purpose.** A single-page operational overview in three sections — Needs Attention, Shipments, and Policies and Renewals — under a sticky header whose links jump to each section and highlight the one in view.
+
+**Needs Attention.** Groups open referrals, pending quotes (Quoted plus Under Review), special rate requests assigned to the user's company, and shipments declined in the last 30 days. Each group shows its count and its first three rows: reference, participant company, countries (full place names on hover), conveyance, status chip, whose move it is, and age. Rows pending 7 days or more turn red. A summary line gives the total pending and links the oldest item. "View all" opens the matching list in the same order and filter.
+
+**Shipments.** Status counts displayed as a strip — each cell opens the list filtered to that status. A total link opens the unfiltered list. Below, period numbers (Last 30 days, This month, or Year to date) show operational rates: quote-to-booking conversion, referral rate, decline rate, cancellation rate, expiry rate, special rate requests created and used, and active named assureds. Each rate shows its base; a base under ten displays the count instead of a percentage.
+
+**Policies and Renewals.** Total policies, active policies expiring soonest (with broker company, policyholder, and days left), incomplete policy quotations not yet issued, endorsed, cancelled, and renewed counts. A renewal list shows days remaining — text turns red under 30 days. Counts that open a list show a link colour and chevron.
+
+**Feed columns.** The home feed includes policy name, lead insurer, and whether the shipment was ever referred and when. The lead insurer is resolved from the insurance companies attribute (largest share when none is flagged). The feed also carries insured value in EUR for effective rate calculation and a flat KN-versus-third-party policy category.
+
+### The Analytics Page
+
+**Where it lives.** A separate Back Office route, accessible from the Analytics menu item. The old Analytics menu opened the legacy Redash index; it now opens a Nacora-native page.
+
+**Purpose.** Strategic BI views (executive, volume and conversion, customers, earnings) for a different audience than the operational Home. Embeds the QuickSight dashboard set configured per environment. Access is gated by the Analytics menu item permission and a separate embed permission. Users who can see the BI dashboard are added to a dedicated QuickSight reader group so that Home users do not automatically gain BI access. If no BI group is configured the page says setup is required. A failed embed returns a generic message; the detailed AWS error stays in the server log.
+
 ### The Shipment Dashboard
 
 **Where it lives.** In both the Shipment Portal (for participants) and the Back Office (as the operational pipeline view for brokers).
 
-**Purpose.** The home screen for both interfaces. Lists every shipment the signed-in user has access to, with search, filters, and status-appropriate actions.
+**Purpose.** Lists every shipment the signed-in user has access to, with search, filters, and status-appropriate actions.
 
 **Portal layout.** Counter cards at the top for Quoted, Booked, and Referred — counts, not sums. A Create Shipment button to start a new declaration. A data grid with the columns below. Row click opens the shipment 360 view.
 
@@ -50,7 +70,7 @@ Visibility is enforced server-side. Participants see only their own records; Bac
 - **Created date** — when the shipment was first saved.
 - **Actions** — quick actions per status (Edit, Endorse, Cancel request, and so on).
 
-**Filters.** Status, date range, policy, currency. Search field matches shipment number, reference, policy name, and holder name.
+**Filters.** Status, date range, policy, currency. Search field matches shipment number, reference, policy name, and holder name. A Declined Date filter supports the 30-day declined view from Home.
 
 **Actions available from the dashboard.** Create Shipment (participant, and broker via Create on behalf of); Export (Back Office); row-level actions per shipment status.
 

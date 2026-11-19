@@ -99,9 +99,33 @@ Environment config lives in `src/environments/environment.ts`:
 
 In BO mode this interceptor is not active — session cookies (`SESSIONID`) authenticate every request, and CSRF token is sent in a header.
 
+### Home page — work queue (CGDEV-42)
+
+The portal Home page was replaced with a work-queue layout. The new Home shows:
+
+- **Needs Attention section** — shipments requiring action, with status-based counts.
+- **Shipments section** — a summary grid of recent shipments with policy, insurer, and referral columns.
+- **Policies section** — active policies and upcoming renewals with period numbers.
+
+The BI dashboard that formerly lived on the Home page now has its own Analytics page, accessible from the sidebar. This separates day-to-day operational work from reporting.
+
+Data hooks live under `libs/nacora/data-access/src/hooks/home/` — `useHomeKpis`, `useHomePolicies`, and `useWorkQueues` feed the three sections.
+
+### 360 views — redesigned layout (CGDEV-95)
+
+Policy and shipment 360 detail pages received a visual overhaul:
+
+- **Key facts strip** at the top — the most important fields (status, reference, premium, dates) in a horizontal summary bar.
+- **Grouped general details** — related fields grouped together instead of a flat list; darker text, slimmer versions table.
+- **Page header card** replaces the old action bar — a single grouped "more actions" menu instead of scattered action buttons.
+- **Removed actions** — edit policy removed from policy 360; send policy email dropped; payment log and update payment method added.
+- **Activities and emails tabs** restored.
+- **Parties card** shows marine cargo wording; View Departments links to a partner search of the policy's participant companies.
+- **Incomplete order 360** follows the same layout — key facts strip, grouped details, documents tab, no edit order action, no premium in versions table.
+
 ### Routing
 
-Both apps use React Router. Route definitions live per-app under `src/app/`. The wizard uses a step-based route pattern (`/general-details`, `/participants`, `/billing`, `/risks`, `/quote-document`, `/certificate-document`, `/rating`, `/clauses`, `/business-rules`, `/other-parties`). The portal uses a resource-first pattern (`/`, `/shipment/:id`, `/create`, `/referrals`, `/special-rates`, …).
+Both apps use React Router. Route definitions live per-app under `src/app/`. The wizard uses a step-based route pattern (`/general-details`, `/participants`, `/billing`, `/risks`, `/quote-document`, `/certificate-document`, `/rating`, `/clauses`, `/business-rules`, `/other-parties`). The portal uses a resource-first pattern (`/`, `/shipment/:id`, `/create`, `/referrals`, `/special-rates`, `/analytics`, …).
 
 Deep-linking works — every step / detail page has a URL. Back / forward navigation preserves in-memory state via Redux.
 

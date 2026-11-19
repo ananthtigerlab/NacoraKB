@@ -37,7 +37,7 @@ The endpoint exposes six operations. Each operation has its own request and resp
 
 **ChangeShipment.** Given a shipment number and updated attributes, endorse the shipment. Semantically equivalent to the Amend Shipment action in the Shipment Portal. Creates a new endorsement, re-issues the certificate, and returns the updated shipment number with its endorsement suffix.
 
-**CancelShipment.** Given a shipment number and a cancellation reason, request cancellation of the shipment. The behaviour follows the Cancellations page — depending on the SOAP user's scope, this either cancels immediately (Back-Office-level authority) or raises a pending cancellation request for broker review.
+**CancelShipment.** Given a shipment number and a cancellation reason, raise a cancellation request for back-office review. The Salog client cannot answer the arrival-status question, so the back office must approve before the cancellation becomes final and billing reads it. The SOAP response reports a pending status until the back office decides; the final CAN status is returned only once the shipment is actually cancelled. A service account can opt into immediate cancellation (bypassing the approval queue) when its SOAP user record is configured with direct cancellation enabled.
 
 ### Request handling
 
@@ -60,6 +60,12 @@ Every incoming request goes through the same pipeline.
 Every request carries a unique message ID in the SOAP header. The response for each message ID is cached for 90 days. If the same message ID is replayed — for any reason, whether client-side retry, network duplication, or accidental re-run — the cached response is returned without re-running the operation. This means a client can safely retry on network failure without worrying about double-booking.
 
 The 90-day cache is a compromise between safety (long enough to catch delayed retries) and storage (short enough to avoid unbounded growth). Beyond 90 days, a repeat with the same message ID is treated as a fresh request.
+
+### Duplicate booking detection
+
+Separate from the message-ID cache, the platform detects when a booking request repeats an earlier one even when the client sends a new message ID (a common pattern when the KN ESB retries a booking it believes failed). A request is treated as a repeat when the same policy already has a shipment created within a configurable time window (default seven days) under the same ShipmentReferenceNo, and, when the request names one, the same NacoraShipmentID. No other fields are compared — if a Salog client needs to change a booked shipment, the correct path is ChangeShipment, not a new booking.
+
+When a repeat is detected, the platform returns the existing shipment's current state as a normal success response. Nothing new is created. The duplicate check never blocks a booking: any error during the check is logged and the booking proceeds as normal.
 
 ### Fault codes
 
@@ -95,6 +101,20 @@ Every fault is logged with the request payload, the SOAP user, and the timestamp
 ### Dry-run flag
 
 Non-production environments support a `dryRun` flag on `BookShipment`. When set, the operation runs the full validation pipeline (auth, mapping, policy lookup, rating) and returns the response — including any fault — without persisting anything to the database. This is the correct way for a client team to test their integration without polluting the environment with test bookings. The flag is ignored on production; production always books.
+
+### REST interface
+
+The same shipment operations are also available as a REST (JSON) interface at the integrations API endpoint. Each REST call is translated into the same dispatcher and handlers used by the SOAP channel, so both interfaces share identical business rules, validation, and error keys. REST bodies use the same field names as the WSDL types, with arrays replacing the SOAP ArrayOf wrappers and element text carried as a Value field.
+
+Authentication is HTTP Basic against the same SOAP user list. Unlike the SOAP channel, REST calls carry no message ID, so they have no replay protection through the message-ID cache (the duplicate booking detection still applies to bookings). The REST surface can be enabled or disabled independently of the SOAP endpoint through a deployment setting. An OpenAPI specification is generated from the WSDL and served at the integrations endpoint for client teams to reference.
+
+### ChangeShipment behaviour
+
+ChangeShipment endorses a booked shipment against the shipment's own policy version. It no longer creates an unwanted MTA draft on the master policy — the endorsement is applied directly to the shipment and a new certificate is issued. This matches how the Shipment Portal applies an amendment.
+
+### Premium fields in responses
+
+SOAP responses report the cargo premium in the standard premium fields (such as MarinePremiumAmount), not the total cost including charges. Charge breakdowns are included separately where the response schema supports them.
 
 ### The SOAP request log
 
@@ -151,6 +171,10 @@ The `locale` header attribute selects the response language for user-facing stri
 - **Rate limits are per SOAP user.** A misbehaving client cannot degrade the endpoint for other users; requests over the cap return `RATE_LIMITED` and are counted for operations monitoring.
 - **Sanctions matches route to referral.** A `SANCTIONS_MATCH` fault does not mean the shipment is lost — it has been created and referred to underwriting. The client should poll `QueryShipment` for the outcome.
 - **All faults are audited.** Every fault is stored in the SOAP request log with the full request/response for later inspection.
+- **Duplicate booking detection by reference.** A booking with the same policy, ShipmentReferenceNo, and NacoraShipmentID (when present) as an existing shipment created within seven days is answered with the existing shipment rather than creating a duplicate. This operates independently of the message-ID cache.
+- **Salog cancellations default to approval.** CancelShipment raises a pending request for back-office review unless the SOAP user is explicitly configured for direct cancellation. The SOAP response shows a pending status until the back office decides.
+- **REST interface available.** The same operations are served as JSON at the integrations API endpoint, sharing all business rules with the SOAP channel. REST calls have no message-ID replay protection.
+- **Premium fields report cargo premium.** SOAP response premium fields carry the cargo premium, not the total cost including charges. Charge breakdowns are reported separately.
 
 ## States & transitions
 
@@ -176,3 +200,4 @@ The shipment created or affected by a SOAP call follows the standard shipment st
 - Shipment Statuses
 - Numbering
 - Audit Trail Module
+- Cancellations
